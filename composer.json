@@ -1,8 +1,8 @@
 {
-    "name": "asoc/data-archive",
+    "name": "asoc/dadatata",
     "license": "GPL-3.0",
     "type": "library",
-    "description": "Library to store files/data and work with them.",
+    "description": "Store and work with files of common kinds.",
     "authors": [
         {
             "name": "Pascal Kuendig",
@@ -21,6 +21,8 @@
         "symfony/process": "~2.4"
     },
     "suggests": {
+        "ffmpeg": "Swiss army knife for video tasks",
+        "pdfbox": "PDF toolbox",
         "mediainfo": "Mediainfo CLI tool to extract metadata from various media formats",
         "exiftool": "Metadata extractor for many file formats"
     }
