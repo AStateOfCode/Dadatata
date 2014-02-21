@@ -7,10 +7,6 @@ trait Thingy {
     /**
      * @var string
      */
-    protected $key;
-    /**
-     * @var string
-     */
     protected $mime;
     /**
      * @var int
@@ -39,22 +35,6 @@ trait Thingy {
     public function getFragments()
     {
         return $this->fragments;
-    }
-
-    /**
-     * @param string $key
-     */
-    public function setKey($key)
-    {
-        $this->key = $key;
-    }
-
-    /**
-     * @return string
-     */
-    public function getKey()
-    {
-        return $this->key;
     }
 
     /**
@@ -107,6 +87,10 @@ trait Thingy {
 
     public function setHash($type, $hash) {
         $this->hashes[$type] = $hash;
+    }
+
+    public function getHash($type) {
+        return $this->hashes[$type];
     }
 
 }

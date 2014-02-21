@@ -16,6 +16,7 @@ interface ThingInterface {
     public function setHashes(array $hashes);
     public function getHashes();
     public function setHash($type, $hash);
+    public function getHash($type);
 
     public function addVariant($name, ThingInterface $thing);
     public function removeVariant($name);

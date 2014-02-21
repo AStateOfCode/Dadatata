@@ -18,24 +18,25 @@ class Store implements StoreInterface {
 
     public function save(ThingInterface $thing, $data)
     {
-        if(is_object($data)) {
-            if($data instanceof \SplFileInfo) {
-                $path = $this->getPath($thing, true);
-                /** @var \SplFileInfo $data */
-                copy($data->getPathname(), $path);
-            }
-            else if($data instanceof FilePathFragments) {
-                $i = 1;
-                foreach($data->getFileInfos() as $file) {
-                    $path = $this->getPath($thing, true, $i);
-                    copy($file->getPathname(), $path);
-                    $i++;
-                }
+        if($data instanceof \SplFileInfo) {
+            $path = $this->getPath($thing, true);
+            /** @var \SplFileInfo $data */
+            copy($data->getPathname(), $path);
+        }
+        else if($data instanceof FilePathFragments) {
+            $i = 1;
+            foreach($data->getFileInfos() as $file) {
+                $path = $this->getPath($thing, true, $i);
+                copy($file->getPathname(), $path);
+                $i++;
             }
         }
-        else {
+        else if(is_string($data) && is_file($data)) {
             $path = $this->getPath($thing, true);
-            file_put_contents($path, $data);
+            copy($data, $path);
+        }
+        else {
+            throw new \Exception(sprintf('Given data is not a file: %s', gettype($data)));
         }
     }
 

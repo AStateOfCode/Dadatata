@@ -11,8 +11,7 @@ class SimpleVariator extends BaseVariator
      */
     protected $filters;
 
-    public function __construct(LibraryInterface $library, array $filters) {
-        parent::__construct($library);
+    public function __construct(array $filters) {
         $this->filters = $filters;
     }
 

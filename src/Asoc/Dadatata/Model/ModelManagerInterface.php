@@ -2,7 +2,7 @@
 
 namespace Asoc\Dadatata\Model;
 
-interface MetadataManagerInterface {
+interface ModelManagerInterface {
 
     public function save(ThingInterface $thing);
 

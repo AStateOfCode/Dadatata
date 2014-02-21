@@ -2,7 +2,7 @@
 
 namespace Asoc\Dadatata\Model;
 
-interface MetadataCreatorInterface {
+interface ModelProviderInterface {
 
     /**
      * @param string|null $category

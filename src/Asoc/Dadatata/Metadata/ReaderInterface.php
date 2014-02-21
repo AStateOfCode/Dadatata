@@ -4,13 +4,6 @@ namespace Asoc\Dadatata\Metadata;
 
 interface ReaderInterface {
 
-    const CATEGORY_IMAGE = 'image';
-    const CATEGORY_AUDIO = 'audio';
-    const CATEGORY_VIDEO = 'video';
-    const CATEGORY_ARCHIVE = 'archive';
-    const CATEGORY_DOCUMENT = 'document';
-    const CATEGORY_TEXT = 'text';
-
     const HASH_SHA1 = 'sha1';
     const HASH_MD5 = 'md5';
     const HASH_SHA512 = 'sha512';
@@ -70,7 +63,5 @@ interface ReaderInterface {
     public function canHandle($mime);
 
     public function extract($path);
-
-    public function getCategory();
 
 }

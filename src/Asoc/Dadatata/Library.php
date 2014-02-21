@@ -6,15 +6,15 @@ use Asoc\Dadatata\Filesystem\StoreInterface;
 use Asoc\Dadatata\Metadata\DescriptorInterface;
 use Asoc\Dadatata\Metadata\ExaminerInterface;
 use Asoc\Dadatata\Model\FilePathFragments;
-use Asoc\Dadatata\Model\MetadataCreatorInterface;
+use Asoc\Dadatata\Model\ModelManagerInterface;
+use Asoc\Dadatata\Model\ModelProviderInterface;
 use Asoc\Dadatata\Model\ThingInterface;
-use Asoc\Dadatata\Model\MetadataManagerInterface;
 
 class Library implements LibraryInterface
 {
 
     /**
-     * @var MetadataCreatorInterface|MetadataManagerInterface
+     * @var ModelProviderInterface|ModelManagerInterface
      */
     protected $manager;
     /**
@@ -34,7 +34,7 @@ class Library implements LibraryInterface
      */
     protected $descriptor;
 
-    public function __construct(MetadataCreatorInterface $manager, StoreInterface $sourceStore, StoreInterface $variantStore, ExaminerInterface $examiner, DescriptorInterface $descriptor) {
+    public function __construct(ModelProviderInterface $manager, StoreInterface $sourceStore, StoreInterface $variantStore, ExaminerInterface $examiner, DescriptorInterface $descriptor) {
         $this->manager = $manager;
         $this->sourceStore = $sourceStore;
         $this->variantStore = $variantStore;
@@ -42,28 +42,14 @@ class Library implements LibraryInterface
         $this->descriptor = $descriptor;
     }
 
-    public function store($data) {
-        if($data instanceof FilePathFragments) {
-            list($category, $mime) = $this->examiner->categorize($data->getFileInfos()[0]);
-            $fragments = $data->getNum();
-        }
-        else {
-            list($category, $mime) = $this->examiner->categorize($data);
-            $fragments = 1;
-        }
 
-        $thing = $this->manager->create($category);
-        $thing->setMime($mime);
-        $thing->setFragments($fragments);
-        $this->sourceStore->save($thing, $data);
 
-        list($knowledge) = $this->examiner->examine($this->getPath($thing));
-        $this->descriptor->describe($thing, $knowledge);
-
-        if($this->manager instanceof MetadataManagerInterface) {
+    public function store(ThingInterface $thing, $data) {
+        if($this->manager instanceof ModelManagerInterface) {
             $this->manager->save($thing);
         }
 
+        $this->sourceStore->save($thing, $data);
         return $thing;
     }
 
@@ -77,45 +63,21 @@ class Library implements LibraryInterface
         }
         $this->sourceStore->remove($thing);
 
-        if($this->manager instanceof MetadataManagerInterface) {
+        if($this->manager instanceof ModelManagerInterface) {
             $this->manager->remove($thing);
         }
     }
 
     public function storeVariant(ThingInterface $thing, $variant, $data) {
-        if($data instanceof FilePathFragments) {
-            list($category, $mime) = $this->examiner->categorize($data->getFileInfos()[0]);
-            $fragments = $data->getNum();
-        }
-        else {
-            list($category, $mime) = $this->examiner->categorize($data);
-            $fragments = 1;
-        }
-
-        if($thing->hasVariant($variant)) {
-            $oldThingVariant = $thing->getVariant($variant);
-            if($oldThingVariant !== false) {
-                $this->variantStore->remove($oldThingVariant);
-                $thing->removeVariant($variant);
-            }
-        }
-
-        $thingVariant = $this->manager->create($category);
-        $thingVariant->setMime($mime);
-        $thingVariant->setFragments($fragments);
-        $this->variantStore->save($thingVariant, $data);
-        $this->removeTemporaryData($data);
-
-        list($knowledge) = $this->examiner->examine($this->getVariantPath($thingVariant));
-        $this->descriptor->describe($thingVariant, $knowledge);
-
+        $thingVariant = $this->identify($data);
         $thing->addVariant($variant, $thingVariant);
 
-        if($this->manager instanceof MetadataManagerInterface) {
-            $this->manager->save($thing);
+        if($this->manager instanceof ModelManagerInterface) {
+            $this->manager->save($thingVariant);
         }
 
-        return $thingVariant;
+        $this->variantStore->save($thing, $data);
+        return $thing;
     }
 
     public function fetchVariant(ThingInterface $thing, $variant, $fragment = 1) {
@@ -130,19 +92,13 @@ class Library implements LibraryInterface
         return $this->sourceStore->getPath($thing);
     }
 
-    public function getVariantPath(ThingInterface $thing, $fragment = 1) {
-        return $this->variantStore->getPath($thing);
-    }
+    public function getVariantPath(ThingInterface $thing, $variant, $fragment = 1) {
+        if(!$thing->hasVariant($variant)) {
+            throw new \Exception(sprintf('Variant does not exist: %s, %s', $thing->getKey(), $variant));
+        }
 
-    private function removeTemporaryData($data) {
-        if($data instanceof \SplFileInfo) {
-            unlink($data->getPathname());
-        }
-        else if($data instanceof FilePathFragments) {
-            foreach($data->getFileInfos() as $fragment) {
-                unlink($fragment->getPathname());
-            }
-        }
+        $fileVariant = $thing->getVariant($variant);
+        return $this->variantStore->getPath($fileVariant);
     }
 
 }

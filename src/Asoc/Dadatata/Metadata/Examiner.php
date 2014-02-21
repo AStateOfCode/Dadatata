@@ -8,16 +8,28 @@ class Examiner implements ExaminerInterface {
      * @var ReaderInterface[]
      */
     private $reader;
+    /**
+     * @var TypeGuesserInterface[]
+     */
+    private $typeGuesser;
 
-    public function __construct(array $reader) {
+    public function __construct(array $typeGuesser, array $reader = []) {
+        $this->typeGuesser = $typeGuesser;
         $this->reader = $reader;
     }
 
-    public function examine($path, $mime = null) {
+    public function examine($fileOrPath, $mime = null) {
         $knowledge = [];
 
+        if($fileOrPath instanceof \SplFileInfo) {
+            $path = $fileOrPath->getPathname();
+        }
+        else {
+            $path = $fileOrPath;
+        }
+
         if($mime === null) {
-            $mime = $this->getMimeFromPath($path);
+            list($_ignore, $mime) = $this->categorize($path);
         }
         $knowledge[ReaderInterface::MIME] = $mime;
         $knowledge[ReaderInterface::SIZE] = filesize($path);
@@ -36,32 +48,24 @@ class Examiner implements ExaminerInterface {
         return [$knowledge, $mime];
     }
 
-    public function categorize($data, $mime = null)
+    public function categorize($fileOrPath, $mime = null)
     {
+        // TODO mime weight
         $categories = [];
 
-        if($mime === null) {
-            if(is_string($data) && ctype_print($data) === true && is_file($data)) {
-                $path = realpath($data);
-                if($path !== null && file_exists($path)) {
-                    $mime = $this->getMimeFromPath($path);
-                }
-            }
-            else if(is_object($data) && $data instanceof \SplFileInfo) {
-                /** @var \SplFileInfo $data */
-                $mime = $this->getMimeFromPath($data->getPathname());
-            }
-            else {
-                $mime = $this->getMimeFromBlob($data);
-            }
+        if($fileOrPath instanceof \SplFileInfo) {
+            $path = $fileOrPath->getPathname();
+        }
+        else {
+            $path = $fileOrPath;
         }
 
-        foreach($this->reader as $reader) {
-            if(!$reader->canHandle($mime)) {
-                continue;
+        foreach($this->typeGuesser as $guesser) {
+            if($mime === null) {
+                $mime = $guesser->getMimeType($path);
             }
 
-            $category = $reader->getCategory();
+            $category = $guesser->categorize($path, $mime);
             if($category === null) {
                 continue;
             }
@@ -83,33 +87,6 @@ class Examiner implements ExaminerInterface {
         }
 
         return [$category, $mime];
-    }
-
-    private function getMimeFromBlob($data) {
-        try {
-            $finfo = new \finfo(FILEINFO_MIME_TYPE);
-            $mime = $finfo->buffer($data);
-            return $mime;
-        }
-        catch(\Exception $e) {
-            /* intentionally silenced */
-        }
-
-        return null;
-    }
-
-    private function getMimeFromPath($path)
-    {
-        try {
-            $finfo = new \finfo(FILEINFO_MIME_TYPE);
-            $mime = $finfo->file($path);
-            return $mime;
-        }
-        catch(\Exception $e) {
-            /* intentionally silenced */
-        }
-
-        return null;
     }
 
 }

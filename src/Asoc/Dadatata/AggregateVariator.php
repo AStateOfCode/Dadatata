@@ -15,10 +15,10 @@ class AggregateVariator implements VariatorInterface {
         $this->variators = $variators;
     }
 
-    public function generate(ThingInterface $thing, $variant, array &$options = [])
+    public function generate(ThingInterface $thing, $variant, $sourcePath, array &$options = [])
     {
         foreach($this->variators as $variator) {
-            $result = $variator->generate($thing, $variant, $options);
+            $result = $variator->generate($thing, $variant, $sourcePath, $options);
             if($result !== null) {
                 return $result;
             }
