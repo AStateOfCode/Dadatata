@@ -12,41 +12,25 @@ class MimeTypeGuesser implements TypeGuesserInterface {
 
         $mime = strtolower($mime);
 
-        // initially taken from
-        // https://github.com/romainneutron/MediaVorus/blob/master/src/MediaVorus/MediaVorus.php
         switch (true) {
             case strpos($mime, 'image/') === 0:
-            case $mime === 'application/postscript':
-            case $mime === 'application/illustrator':
+            case isset(static::$mimeCategoryMapImage[$mime]):
                 return self::CATEGORY_IMAGE;
 
             case strpos($mime, 'video/') === 0:
-            case $mime === 'application/vnd.rn-realmedia':
+            case isset(static::$mimeCategoryMapVideo[$mime]):
                 return self::CATEGORY_VIDEO;
 
             case strpos($mime, 'audio/') === 0:
+            case isset(static::$mimeCategoryMapAudio[$mime]):
                 return self::CATEGORY_AUDIO;
 
             case strpos($mime, 'text/') === 0:
-            case $mime === 'application/msword':
-            case $mime === 'application/access':
-            case $mime === 'application/pdf':
-            case $mime === 'application/excel':
-            case $mime === 'application/powerpoint':
-            case $mime === 'application/vnd.ms-powerpoint':
-            case $mime === 'application/vnd.ms-excel':
-            case $mime === 'application/vnd.oasis.opendocument.formula':
-            case $mime === 'application/vnd.oasis.opendocument.text-master':
-            case $mime === 'application/vnd.oasis.opendocument.database':
-            case $mime === 'application/vnd.oasis.opendocument.chart':
-            case $mime === 'application/vnd.oasis.opendocument.graphics':
-            case $mime === 'application/vnd.oasis.opendocument.presentation':
-            case $mime === 'application/vnd.oasis.opendocument.speadsheet':
-            case $mime === 'application/vnd.oasis.opendocument.text':
-                return self::CATEGORY_DOCUMENT;
+            case isset(static::$mimeCategoryMapText[$mime]):
+                return self::CATEGORY_TEXT;
 
-            default:
-                break;
+            case isset(static::$mimeCategoryMapDocument[$mime]):
+                return self::CATEGORY_DOCUMENT;
         }
 
         return null;
@@ -65,4 +49,40 @@ class MimeTypeGuesser implements TypeGuesserInterface {
 
         return null;
     }
+
+    public static $mimeCategoryMapImage = [
+        'application/postscript',
+        'application/illustrator'
+    ];
+
+    public static $mimeCategoryMapAudio = [
+        'application/ogg'
+    ];
+
+    public static $mimeCategoryMapVideo = [
+        'application/vnd.rn-realmedia'
+    ];
+
+    public static $mimeCategoryMapText = [
+        'application/x-php'
+    ];
+
+    public static $mimeCategoryMapDocument = [
+        'application/msword',
+        'application/access',
+        'application/pdf',
+        'application/excel',
+        'application/powerpoint',
+        'application/vnd.ms-powerpoint',
+        'application/vnd.ms-excel',
+        'application/vnd.oasis.opendocument.formula',
+        'application/vnd.oasis.opendocument.text-master',
+        'application/vnd.oasis.opendocument.database',
+        'application/vnd.oasis.opendocument.chart',
+        'application/vnd.oasis.opendocument.graphics',
+        'application/vnd.oasis.opendocument.presentation',
+        'application/vnd.oasis.opendocument.speadsheet',
+        'application/vnd.oasis.opendocument.text'
+    ];
+
 }
