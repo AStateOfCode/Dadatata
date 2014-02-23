@@ -23,7 +23,7 @@ class AudioVorbis extends BaseAudioReader {
 
     public function canHandle($mime)
     {
-        return $mime === 'audio/x-ogg' || $mime === 'application/ogg';
+        return $mime === 'audio/x-ogg' || $mime === 'application/ogg' || $mime === 'audio/ogg';
     }
 
     protected function getValue($group, $tag, ValueInterface $value)
