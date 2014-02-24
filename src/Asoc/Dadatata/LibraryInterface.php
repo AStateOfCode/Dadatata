@@ -8,9 +8,10 @@ interface LibraryInterface
 {
     /**
      * @param mixed $data
+     * @param ThingInterface $thing
      * @return ThingInterface
      */
-    public function identify($data);
+    public function identify($data, ThingInterface $thing = null);
 
     /**
      * @param ThingInterface $thing
@@ -38,9 +39,10 @@ interface LibraryInterface
 
     /**
      * @param $data
+     * @param Model\ThingInterface $thing
      * @return ThingInterface
      */
-    public function store($data);
+    public function store($data, ThingInterface $thing = null);
 
     /**
      * @param ThingInterface $thing

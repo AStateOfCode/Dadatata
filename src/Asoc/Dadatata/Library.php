@@ -5,11 +5,12 @@ namespace Asoc\Dadatata;
 use Asoc\Dadatata\Filesystem\StoreInterface;
 use Asoc\Dadatata\Metadata\DescriptorInterface;
 use Asoc\Dadatata\Metadata\ExaminerInterface;
+use Asoc\Dadatata\Model\FilePathFragments;
 use Asoc\Dadatata\Model\ModelManagerInterface;
 use Asoc\Dadatata\Model\ModelProviderInterface;
 use Asoc\Dadatata\Model\ThingInterface;
 
-class Library extends AbstractLibrary
+class Library implements LibraryInterface
 {
 
     /**
@@ -41,9 +42,9 @@ class Library extends AbstractLibrary
         $this->descriptor = $descriptor;
     }
 
-    public function store($data) {
-        $thing = $this->identify($data);
 
+
+    public function store(ThingInterface $thing, $data) {
         if($this->manager instanceof ModelManagerInterface) {
             $this->manager->save($thing);
         }
@@ -75,8 +76,8 @@ class Library extends AbstractLibrary
             $this->manager->save($thingVariant);
         }
 
-        $this->variantStore->save($thingVariant, $data);
-        return $thingVariant;
+        $this->variantStore->save($thing, $data);
+        return $thing;
     }
 
     public function fetchVariant(ThingInterface $thing, $variant, $fragment = 1) {
@@ -100,25 +101,4 @@ class Library extends AbstractLibrary
         return $this->variantStore->getPath($fileVariant);
     }
 
-    /**
-     * @return ExaminerInterface
-     */
-    protected function getIdentifier()
-    {
-        return $this->examiner;
-    }
-
-    protected function describe(ThingInterface $thing, $path)
-    {
-        list($knowledge) = $this->examiner->examine($path, $thing->getMime());
-        $this->descriptor->describe($thing, $knowledge);
-    }
-
-    /**
-     * @return ModelProviderInterface
-     */
-    protected function getModelProvider()
-    {
-        return $this->manager;
-    }
 }

@@ -9,7 +9,7 @@ use Asoc\Dadatata\Model\ThingInterface;
 
 abstract class AbstractLibrary implements LibraryInterface {
 
-    public function identify($data) {
+    public function identify($data, ThingInterface $thing = null) {
         $examiner = $this->getIdentifier();
 
         // by default, there's one file fragment
@@ -52,7 +52,10 @@ abstract class AbstractLibrary implements LibraryInterface {
 
         $modelProvider = $this->getModelProvider();
 
-        $thing = $modelProvider->create($category);
+        if($thing === null) {
+            $thing = $modelProvider->create($category);
+        }
+
         $thing->setMime($mime);
         $thing->setFragments($fragments);
 
