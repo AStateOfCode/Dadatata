@@ -4,7 +4,7 @@ namespace Asoc\Dadatata\Filesystem;
 
 use Asoc\Dadatata\Model\ThingInterface;
 
-class SimpleLocator implements LocatorInterface {
+class FlatLocator implements LocatorInterface {
 
     /**
      * @var
