@@ -133,4 +133,23 @@ class ImagineResize extends BaseImageFilter {
     {
         return $thing instanceof ImageInterface;
     }
+
+    /**
+     * @param array $options
+     */
+    public function setOptions(array $options)
+    {
+        if(isset($options['width'])) {
+            $this->width = $options['width'];
+        }
+        if(isset($options['height'])) {
+            $this->height = $options['height'];
+        }
+        if(isset($options['format'])) {
+            $this->format = $options['format'];
+        }
+        if(isset($options['quality'])) {
+            $this->quality = $options['quality'];
+        }
+    }
 }

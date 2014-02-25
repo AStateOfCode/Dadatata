@@ -8,6 +8,11 @@ use Asoc\Dadatata\Model\ThingInterface;
 interface FilterInterface {
 
     /**
+     * @param array $options
+     */
+    public function setOptions(array $options);
+
+    /**
      * @param ThingInterface $thing
      * @param $sourcePath
      * @param array $options
