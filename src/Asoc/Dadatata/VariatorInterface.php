@@ -15,4 +15,15 @@ interface VariatorInterface
      * @return null|FilePathFragments
      */
     public function generate(ThingInterface $thing, $variant, $sourcePath, array &$options = []);
+
+    /**
+     * @return array
+     */
+    public function getSupportedVariants();
+
+    /**
+     * @param string $variant Variant name
+     * @return bool
+     */
+    public function hasSupportFor($variant);
 }

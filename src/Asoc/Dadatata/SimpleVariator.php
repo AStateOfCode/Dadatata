@@ -23,4 +23,21 @@ class SimpleVariator extends BaseVariator
 
         return $this->filters[$variant];
     }
+
+    /**
+     * @return array
+     */
+    public function getSupportedVariants()
+    {
+        return array_keys($this->filters);
+    }
+
+    /**
+     * @param string $variant Variant name
+     * @return bool
+     */
+    public function hasSupportFor($variant)
+    {
+        return isset($this->filters[$variant]);
+    }
 }

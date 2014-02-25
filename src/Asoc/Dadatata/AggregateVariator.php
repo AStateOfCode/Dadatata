@@ -26,4 +26,30 @@ class AggregateVariator implements VariatorInterface {
 
         return null;
     }
+
+    /**
+     * @return array
+     */
+    public function getSupportedVariants()
+    {
+        $supported = [];
+        foreach($this->variators as $variator) {
+            $supported = array_merge($supported, $variator->getSupportedVariants());
+        }
+        return $supported;
+    }
+
+    /**
+     * @param string $variant Variant name
+     * @return bool
+     */
+    public function hasSupportFor($variant)
+    {
+        foreach($this->variators as $variator) {
+            if($variator->hasSupportFor($variant)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
