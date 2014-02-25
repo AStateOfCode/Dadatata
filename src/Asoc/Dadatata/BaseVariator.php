@@ -21,6 +21,10 @@ abstract class BaseVariator implements VariatorInterface
             return null;
         }
 
+        if(!$filter->canHandle($thing)) {
+            return null;
+        }
+
         $targetPaths = $filter->process($thing, $sourcePath, $options);
         if($targetPaths === null) {
             return null;

@@ -19,13 +19,13 @@ abstract class AbstractLibrary implements LibraryInterface {
         if($data instanceof FilePathFragments) {
             // first fragment is responsible for determining all the infos
             $file = $data->getFileInfos()[0];
-            list($category, $mime) = $examiner->categorize($file);
-            $fragments = $data->getNum();
             $path = $file->getPathname();
+            list($category, $mime) = $examiner->categorize($path);
+            $fragments = $data->getNum();
         }
         else if($data instanceof \SplFileInfo) {
-            list($category, $mime) = $examiner->categorize($data);
             $path = $data->getPathname();
+            list($category, $mime) = $examiner->categorize($path);
         }
         // check if a blob or something different has been passed here
         else {

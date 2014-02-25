@@ -18,6 +18,10 @@ class AggregateVariator implements VariatorInterface {
     public function generate(ThingInterface $thing, $variant, $sourcePath, array &$options = [])
     {
         foreach($this->variators as $variator) {
+            if(!$variator->hasSupportFor($variant)) {
+                continue;
+            }
+
             $result = $variator->generate($thing, $variant, $sourcePath, $options);
             if($result !== null) {
                 return $result;
