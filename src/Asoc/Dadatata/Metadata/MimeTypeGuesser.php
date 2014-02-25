@@ -51,38 +51,38 @@ class MimeTypeGuesser implements TypeGuesserInterface {
     }
 
     public static $mimeCategoryMapImage = [
-        'application/postscript',
-        'application/illustrator'
+        'application/postscript' => true,
+        'application/illustrator' => true
     ];
 
     public static $mimeCategoryMapAudio = [
-        'application/ogg'
+        'application/ogg' => true
     ];
 
     public static $mimeCategoryMapVideo = [
-        'application/vnd.rn-realmedia'
+        'application/vnd.rn-realmedia' => true
     ];
 
     public static $mimeCategoryMapText = [
-        'application/x-php'
+        'application/x-php' => true
     ];
 
     public static $mimeCategoryMapDocument = [
-        'application/msword',
-        'application/access',
-        'application/pdf',
-        'application/excel',
-        'application/powerpoint',
-        'application/vnd.ms-powerpoint',
-        'application/vnd.ms-excel',
-        'application/vnd.oasis.opendocument.formula',
-        'application/vnd.oasis.opendocument.text-master',
-        'application/vnd.oasis.opendocument.database',
-        'application/vnd.oasis.opendocument.chart',
-        'application/vnd.oasis.opendocument.graphics',
-        'application/vnd.oasis.opendocument.presentation',
-        'application/vnd.oasis.opendocument.speadsheet',
-        'application/vnd.oasis.opendocument.text'
+        'application/msword' => true,
+        'application/access' => true,
+        'application/pdf' => true,
+        'application/excel' => true,
+        'application/powerpoint' => true,
+        'application/vnd.ms-powerpoint' => true,
+        'application/vnd.ms-excel' => true,
+        'application/vnd.oasis.opendocument.formula' => true,
+        'application/vnd.oasis.opendocument.text-master' => true,
+        'application/vnd.oasis.opendocument.database' => true,
+        'application/vnd.oasis.opendocument.chart' => true,
+        'application/vnd.oasis.opendocument.graphics' => true,
+        'application/vnd.oasis.opendocument.presentation' => true,
+        'application/vnd.oasis.opendocument.speadsheet' => true,
+        'application/vnd.oasis.opendocument.text' => true
     ];
 
 }
