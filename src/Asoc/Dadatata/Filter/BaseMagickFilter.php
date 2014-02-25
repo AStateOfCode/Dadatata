@@ -82,6 +82,19 @@ abstract class BaseMagickFilter extends BaseImageFilter {
     }
 
     /**
+     * @param array $options
+     */
+    public function setOptions(array $options)
+    {
+        if(isset($options['width'])) {
+            $this->width = $options['width'];
+        }
+        if(isset($options['height'])) {
+            $this->height = $options['height'];
+        }
+    }
+
+    /**
      * @param ThingInterface|ImageInterface $thing
      * @param string $sourcePath
      * @return string
