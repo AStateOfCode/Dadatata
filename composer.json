@@ -1,6 +1,6 @@
 {
     "name": "asoc/dadatata",
-    "license": "GPL-3.0",
+    "license": "MIT",
     "type": "library",
     "description": "Store and work with files of common kinds.",
     "authors": [
