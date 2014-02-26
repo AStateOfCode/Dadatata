@@ -3,6 +3,7 @@
 namespace Asoc\Dadatata;
 
 use Asoc\Dadatata\Filter\FilterInterface;
+use Asoc\Dadatata\Filter\OptionsInterface;
 
 class SimpleVariator extends BaseVariator
 {
@@ -15,7 +16,7 @@ class SimpleVariator extends BaseVariator
         $this->filters = $filters;
     }
 
-    protected function getFilterForVariant($variant, array &$options = [])
+    protected function getFilterForVariant($variant, OptionsInterface $options = null)
     {
         if(!isset($this->filters[$variant])) {
             throw new \Exception(sprintf('Filter for variant does not exist: %s', $variant));

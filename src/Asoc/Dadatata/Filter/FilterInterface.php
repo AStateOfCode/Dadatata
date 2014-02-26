@@ -8,17 +8,17 @@ use Asoc\Dadatata\Model\ThingInterface;
 interface FilterInterface {
 
     /**
-     * @param array $options
+     * @param OptionsInterface $options
      */
-    public function setOptions(array $options);
+    public function setOptions(OptionsInterface $options);
 
     /**
      * @param ThingInterface $thing
-     * @param $sourcePath
-     * @param array $options
+     * @param string $sourcePath
+     * @param \Asoc\Dadatata\Filter\OptionsInterface|null $options
      * @return array Paths to generated files
      */
-    public function process(ThingInterface $thing, $sourcePath, array $options = null);
+    public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null);
 
     /**
      * @param ThingInterface $thing

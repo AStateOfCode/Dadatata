@@ -17,10 +17,11 @@ class ChainFilter implements FilterInterface {
 
     /**
      * @param ThingInterface $thing
-     * @param $sourcePath
+     * @param string $sourcePath
+     * @param OptionsInterface $options
      * @return array Paths to generated files
      */
-    public function process(ThingInterface $thing, $sourcePath, array $options = null)
+    public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null)
     {
         $result = null;
         foreach($this->filters as $filter) {
@@ -42,5 +43,13 @@ class ChainFilter implements FilterInterface {
     public function canHandle(ThingInterface $thing)
     {
         return $this->filters[0]->canHandle($thing);
+    }
+
+    /**
+     * @param OptionsInterface $options
+     */
+    public function setOptions(OptionsInterface $options)
+    {
+
     }
 }

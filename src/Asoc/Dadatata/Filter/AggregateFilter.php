@@ -17,10 +17,11 @@ class AggregateFilter implements FilterInterface {
 
     /**
      * @param ThingInterface $thing
-     * @param $sourcePath
+     * @param string $sourcePath
+     * @param OptionsInterface $options
      * @return array Paths to generated files
      */
-    public function process(ThingInterface $thing, $sourcePath, array $options = null)
+    public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null)
     {
         foreach($this->filters as $filter) {
             if($filter->canHandle($thing)) {
@@ -44,5 +45,15 @@ class AggregateFilter implements FilterInterface {
         }
 
         return false;
+    }
+
+    /**
+     * @param OptionsInterface $options
+     */
+    public function setOptions(OptionsInterface $options)
+    {
+        foreach($this->filters as $filter) {
+            $filter->setOptions($options);
+        }
     }
 }

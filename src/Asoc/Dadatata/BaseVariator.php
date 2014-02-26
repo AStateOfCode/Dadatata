@@ -3,6 +3,7 @@
 namespace Asoc\Dadatata;
 
 use Asoc\Dadatata\Filter\FilterInterface;
+use Asoc\Dadatata\Filter\OptionsInterface;
 use Asoc\Dadatata\Model\FilePathFragments;
 use Asoc\Dadatata\Model\ThingInterface;
 
@@ -13,9 +14,9 @@ abstract class BaseVariator implements VariatorInterface
      * @param array $options
      * @return FilterInterface
      */
-    abstract protected function getFilterForVariant($variant, array &$options = []);
+    abstract protected function getFilterForVariant($variant, OptionsInterface $options = null);
 
-    public function generate(ThingInterface $thing, $variant, $sourcePath, array &$options = []) {
+    public function generate(ThingInterface $thing, $variant, $sourcePath, OptionsInterface $options = null) {
         $filter = $this->getFilterForVariant($variant, $options);
         if($filter === null) {
             return null;

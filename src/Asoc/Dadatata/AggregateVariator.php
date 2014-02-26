@@ -2,6 +2,7 @@
 
 namespace Asoc\Dadatata;
 
+use Asoc\Dadatata\Filter\OptionsInterface;
 use Asoc\Dadatata\Model\ThingInterface;
 
 class AggregateVariator implements VariatorInterface {
@@ -15,7 +16,7 @@ class AggregateVariator implements VariatorInterface {
         $this->variators = $variators;
     }
 
-    public function generate(ThingInterface $thing, $variant, $sourcePath, array &$options = [])
+    public function generate(ThingInterface $thing, $variant, $sourcePath, OptionsInterface $options = null)
     {
         foreach($this->variators as $variator) {
             if(!$variator->hasSupportFor($variant)) {
