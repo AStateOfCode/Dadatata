@@ -64,8 +64,4 @@ class ImageOptions extends Options {
             self::OPTION_THUMBNAIL
         ]);
     }
-
-    protected function getClass() {
-        return __CLASS__;
-    }
 } 

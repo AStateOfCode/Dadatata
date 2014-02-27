@@ -4,6 +4,7 @@ namespace Asoc\Dadatata\Filter\ImageMagick;
 
 use Asoc\Dadatata\Exception\ProcessingFailedException;
 use Asoc\Dadatata\Filter\BaseMagickFilter;
+use Asoc\Dadatata\Filter\ImageOptions;
 use Asoc\Dadatata\Filter\OptionsInterface;
 use Asoc\Dadatata\Model\ImageInterface;
 use Asoc\Dadatata\Model\ThingInterface;
@@ -13,7 +14,7 @@ class Resize extends BaseMagickFilter {
     /**
      * @param ThingInterface|ImageInterface $thing
      * @param string $sourcePath
-     * @param OptionsInterface $options
+     * @param OptionsInterface|ImageOptions $options
      * @throws \Asoc\Dadatata\Exception\ProcessingFailedException
      * @return array Paths to generated files
      */

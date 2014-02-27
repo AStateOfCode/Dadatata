@@ -2,59 +2,13 @@
 
 namespace Asoc\Dadatata\Filter\ImageMagick;
 
-use Asoc\Dadatata\Model\DocumentInterface;
+use Asoc\Dadatata\Exception\ProcessingFailedException;
+use Asoc\Dadatata\Filter\BaseMagickFilter;
+use Asoc\Dadatata\Filter\DocumentImageOptions;
+use Asoc\Dadatata\Filter\OptionsInterface;
 use Asoc\Dadatata\Model\ThingInterface;
 
-class PdfRender extends Resize {
-
-    protected $pages;
-
-    protected $density;
-
-    protected $background;
-
-    protected $removeAlpha;
-
-    protected function init()
-    {
-        parent::init();
-        $this->removeAlpha = true;
-        $this->background = 'white';
-        $this->density = 150;
-        $this->pages = 'all';
-    }
-
-    /**
-     * @param mixed $removeAlpha
-     */
-    public function setRemoveAlpha($removeAlpha)
-    {
-        $this->removeAlpha = $removeAlpha;
-    }
-
-    /**
-     * @param mixed $pages
-     */
-    public function setPages($pages)
-    {
-        $this->pages = $pages;
-    }
-
-    /**
-     * @param mixed $density
-     */
-    public function setDensity($density)
-    {
-        $this->density = $density;
-    }
-
-    /**
-     * @param mixed $background
-     */
-    public function setBackground($background)
-    {
-        $this->background = $background;
-    }
+class PdfRender extends BaseMagickFilter {
 
     public function canHandle(ThingInterface $thing)
     {
@@ -62,59 +16,52 @@ class PdfRender extends Resize {
     }
 
     /**
-     * @param ThingInterface|DocumentInterface $thing
-     * @param $sourcePath
+     * @param ThingInterface $thing
+     * @param string $sourcePath
+     * @param OptionsInterface|DocumentImageOptions $options
+     * @throws \Asoc\Dadatata\Exception\ProcessingFailedException
      * @return array
      */
-    public function process(ThingInterface $thing, $sourcePath, array $options = null) {
+    public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null) {
         $tmpPath = tempnam(sys_get_temp_dir(), 'Dadatata');
 
+        $options = $this->defaults->merge($options);
+
         $pb = $this->getConvertProcess();
-        $pb->add('-quality')->add($this->quality);
+        $pb->add('-quality')->add($options->getQuality());
 
         // so the output resolution won't be crap
         $pb->add('-density')->add(150);
 
         // should fix resulting image in being black
-        $pb->add('-background')->add($this->background);
+        $pb->add('-background')->add('white');
+        $pb->add('-alpha')->add('remove');
 
-        if($this->removeAlpha) {
-            $pb->add('-alpha')->add('remove');
-        }
-
-        $width = $this->width;
-        $height = $this->height;
-
-        if($options !== null) {
-            if(isset($options['width'])) {
-                $width = $options['width'];
-            }
-            if(isset($options['height'])) {
-                $height = $options['height'];
-            }
-        }
-
+        $width = $options->getWidth();
+        $height = $options->getHeight();
         $pb->add('-resize')->add(sprintf('%dx%d', $width, $height));
 
-        if($this->pages === 'all') {
+        $pages = $options->getPages();
+        if($pages === 'all') {
             $pb->add(sprintf('%s', $sourcePath));
         }
         else {
-            $pb->add(sprintf('%s[%s]', $sourcePath, $this->pages));
+            $pages = intval($pages);
+            $pb->add(sprintf('%s[%s]', $sourcePath, $pages));
         }
 
-        $pb->add(sprintf('%s:%s', $this->format, $tmpPath));
+        $pb->add(sprintf('%s:%s', $options->getFormat(), $tmpPath));
 
         $process = $pb->getProcess();
-
         $code = $process->run();
 
-        $x = $process->getOutput();
-        $y = $process->getErrorOutput();
+        if($code !== 0) {
+            throw ProcessingFailedException::create('Failed to render PDF as image', $code, $process->getOutput(), $process->getErrorOutput());
+        }
 
         $tmpPaths = [];
-        if($this->pages === 'all') {
-            for($i = 0, $n = $thing->getPages(); $i < $n; $i++) {
+        if($pages === 'all') {
+            for($i = 0, $n = $pages; $i < $n; $i++) {
                 $tmpPaths[] = sprintf('%s-%d', $tmpPath, $i);
             }
         }
