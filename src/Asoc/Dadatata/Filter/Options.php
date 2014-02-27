@@ -56,6 +56,10 @@ class Options implements OptionsInterface {
         return $valueWhenUnset;
     }
 
+    public function has($key) {
+        return isset($this->options[$key]);
+    }
+
     protected function setDefaultOptions(OptionsResolverInterface $resolver)
     {
     }

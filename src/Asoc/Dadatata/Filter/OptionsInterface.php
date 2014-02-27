@@ -19,6 +19,12 @@ interface OptionsInterface {
     public function set($key, $value);
 
     /**
+     * @param string $key
+     * @return boolean
+     */
+    public function has($key);
+
+    /**
      * @return array
      */
     public function all();
