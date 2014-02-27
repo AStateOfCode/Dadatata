@@ -68,13 +68,9 @@ class MimeTypeGuesser implements TypeGuesserInterface {
     ];
 
     public static $mimeCategoryMapDocument = [
-        'application/msword' => true,
-        'application/access' => true,
         'application/pdf' => true,
-        'application/excel' => true,
-        'application/powerpoint' => true,
-        'application/vnd.ms-powerpoint' => true,
-        'application/vnd.ms-excel' => true,
+
+        // open documents
         'application/vnd.oasis.opendocument.formula' => true,
         'application/vnd.oasis.opendocument.text-master' => true,
         'application/vnd.oasis.opendocument.database' => true,
@@ -82,7 +78,23 @@ class MimeTypeGuesser implements TypeGuesserInterface {
         'application/vnd.oasis.opendocument.graphics' => true,
         'application/vnd.oasis.opendocument.presentation' => true,
         'application/vnd.oasis.opendocument.speadsheet' => true,
-        'application/vnd.oasis.opendocument.text' => true
+        'application/vnd.oasis.opendocument.text' => true,
+
+        // microsoft office <2007
+        'application/msword' => true,
+        'application/access' => true,
+        'application/excel' => true,
+        'application/powerpoint' => true,
+        'application/vnd.ms-powerpoint' => true,
+        'application/vnd.ms-excel' => true,
+
+        // microsoft office >=2007
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => true,
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.template' => true,
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => true,
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.template' => true,
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation' => true,
+        'application/vnd.openxmlformats-officedocument.presentationml.template' => true
     ];
 
 }
