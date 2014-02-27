@@ -10,6 +10,10 @@ use Asoc\Dadatata\Model\ThingInterface;
 abstract class AbstractLibrary implements LibraryInterface {
 
     public function identify($data, ThingInterface $thing = null) {
+        if($data === null || !isset($data)) {
+            throw new \InvalidArgumentException('Cannot identify empty data');
+        }
+
         $examiner = $this->getIdentifier();
 
         // by default, there's one file fragment
@@ -39,14 +43,14 @@ abstract class AbstractLibrary implements LibraryInterface {
                 $path = realpath($data);
             }
             else {
-                throw new \Exception(sprintf('Given data is not supported: %s', gettype($data)));
+                throw new \InvalidArgumentException(sprintf('Cannot itentify data, unsupported type: %s', gettype($data)));
             }
 
             if($path !== null && file_exists($path)) {
                 list($category, $mime) = $examiner->categorize($data);
             }
             else {
-                throw new \Exception(sprintf('Given path does not exist: %s', gettype($data)));
+                throw new \InvalidArgumentException(sprintf('Cannot identify data, file does not exist: %s', gettype($data)));
             }
         }
 
