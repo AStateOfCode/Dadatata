@@ -2,6 +2,7 @@
 
 namespace Asoc\Dadatata;
 
+use Asoc\Dadatata\Exception\FilterDoesNotSupportInput;
 use Asoc\Dadatata\Filter\FilterInterface;
 use Asoc\Dadatata\Filter\OptionsInterface;
 use Asoc\Dadatata\Model\FilePathFragments;
@@ -18,12 +19,9 @@ abstract class BaseVariator implements VariatorInterface
 
     public function generate(ThingInterface $thing, $variant, $sourcePath, OptionsInterface $options = null) {
         $filter = $this->getFilterForVariant($variant, $options);
-        if($filter === null) {
-            return null;
-        }
 
         if(!$filter->canHandle($thing)) {
-            return null;
+            throw new FilterDoesNotSupportInput(sprintf('%s does not support %s', get_class($filter), get_class($thing)));
         }
 
         $targetPaths = $filter->process($thing, $sourcePath, $options);

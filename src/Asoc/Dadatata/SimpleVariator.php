@@ -2,6 +2,7 @@
 
 namespace Asoc\Dadatata;
 
+use Asoc\Dadatata\Exception\NoFilterDefinedForVariant;
 use Asoc\Dadatata\Filter\FilterInterface;
 use Asoc\Dadatata\Filter\OptionsInterface;
 
@@ -19,7 +20,7 @@ class SimpleVariator extends BaseVariator
     protected function getFilterForVariant($variant, OptionsInterface $options = null)
     {
         if(!isset($this->filters[$variant])) {
-            throw new \Exception(sprintf('Filter for variant does not exist: %s', $variant));
+            throw new NoFilterDefinedForVariant();
         }
 
         return $this->filters[$variant];
