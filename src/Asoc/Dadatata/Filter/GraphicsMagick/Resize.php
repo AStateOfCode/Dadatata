@@ -2,32 +2,52 @@
 
 namespace Asoc\Dadatata\Filter\GraphicsMagick;
 
+use Asoc\Dadatata\Exception\ProcessingFailedException;
 use Asoc\Dadatata\Filter\BaseMagickFilter;
+use Asoc\Dadatata\Filter\ImageOptions;
+use Asoc\Dadatata\Filter\OptionsInterface;
+use Asoc\Dadatata\Model\ImageInterface;
 use Asoc\Dadatata\Model\ThingInterface;
-use Symfony\Component\Process\ProcessBuilder;
 
 class Resize extends BaseMagickFilter {
 
-    public function __construct($bin = '/usr/bin/gm') {
-        $this->bin = $bin;
-        $this->init();
-    }
-
     /**
-     * @return ProcessBuilder
-     */
-    protected function getConvertProcess()
-    {
-        return new ProcessBuilder([$this->bin, 'convert']);
-    }
-
-    /**
-     * @param ThingInterface $thing
-     * @param $sourcePath
+     * @param ThingInterface|ImageInterface $thing
+     * @param string $sourcePath
+     * @param OptionsInterface|ImageOptions $options
+     * @throws \Asoc\Dadatata\Exception\ProcessingFailedException
      * @return array Paths to generated files
      */
-    public function process(ThingInterface $thing, $sourcePath, array $options = null)
+    public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null)
     {
-        return $this->firstToImage($thing, $sourcePath);
+        $tmpPath = tempnam(sys_get_temp_dir(), 'Dadatata');
+
+        $options = $this->defaults->merge($options);
+
+        $pb = $this->getConvertProcess();
+        $pb->add('-quality')->add($options->getQuality());
+
+        $width = $options->getWidth();
+        $height = $options->getHeight();
+
+        list($resizeRatio, $width, $height) = $this->getProperSize($width, $height, $thing->getWidth(), $thing->getHeight());
+
+        // only perform a resize when width and/or height changed
+        if($thing->getWidth() !== $width || $thing->getHeight() !== $height) {
+            $pb->add('-resize')->add(sprintf('%dx%d', $width, $height));
+        }
+
+        $pb->add(sprintf('%s[0]', $sourcePath));
+        $pb->add(sprintf('%s:%s', $options->getFormat(), $tmpPath));
+
+        $process = $pb->getProcess();
+        $code = $process->run();
+
+        if($code !== 0) {
+            throw ProcessingFailedException::create('Failed to resize image', $code, $process->getOutput(), $process->getErrorOutput());
+        }
+
+        return [$tmpPath];
     }
+
 }
