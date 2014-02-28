@@ -13,7 +13,7 @@ class ImageOptions extends Options {
     const OPTION_QUALITY = 'quality';
     const OPTION_THUMBNAIL = 'thumbnail';
 
-    const FORMAT_JPG = 'jpeg';
+    const FORMAT_JPG = 'jpg';
     const FORMAT_PNG = 'png';
     const FORMAT_WEBP = 'webp';
 
