@@ -87,11 +87,11 @@ class Library extends AbstractLibrary
         $this->variantStore->remove($variant);
     }
 
-    public function getPath(ThingInterface $thing, $fragment = 1) {
+    public function getPath(ThingInterface $thing, $fragment = 1, $relative = false) {
         return $this->sourceStore->getPath($thing);
     }
 
-    public function getVariantPath(ThingInterface $thing, $variant, $fragment = 1) {
+    public function getVariantPath(ThingInterface $thing, $variant, $fragment = 1, $relative = false) {
         if(!$thing->hasVariant($variant)) {
             throw new \Exception(sprintf('Variant does not exist: %s, %s', $thing->getKey(), $variant));
         }
@@ -120,5 +120,16 @@ class Library extends AbstractLibrary
     protected function getModelProvider()
     {
         return $this->manager;
+    }
+
+    /**
+     * Update the data associated with the thing. Will clear any previous variants.
+     *
+     * @param ThingInterface $thing The real thing
+     * @param string|\SplFileInfo $data File path (string) or file object
+     */
+    public function update(ThingInterface $thing, $data)
+    {
+        throw new \Exception('Not implemented');
     }
 }

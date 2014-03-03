@@ -57,6 +57,14 @@ interface LibraryInterface
     public function store($data, ThingInterface $thing = null);
 
     /**
+     * Update the data associated with the thing. Will clear any previous variants.
+     *
+     * @param ThingInterface $thing The real thing
+     * @param string|\SplFileInfo $data File path (string) or file object
+     */
+    public function update(ThingInterface $thing, $data);
+
+    /**
      * Delete the metadata and contents.
      *
      * @param ThingInterface $thing

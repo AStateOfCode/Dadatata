@@ -90,7 +90,10 @@ trait Thingy {
     }
 
     public function getHash($type) {
-        return $this->hashes[$type];
+        if(isset($this->hashes[$type])) {
+            return $this->hashes[$type];
+        }
+        return null;
     }
 
 }
