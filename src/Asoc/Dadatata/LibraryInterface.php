@@ -7,66 +7,86 @@ use Asoc\Dadatata\Model\ThingInterface;
 interface LibraryInterface
 {
     /**
-     * @param mixed $data
-     * @param ThingInterface $thing
+     * Extracts file metadata from given data. If no existing metadata holder object is given, it will create a
+     * new one.
+     *
+     * @param string|\SplFileInfo $data File path (string) or file object
+     * @param ThingInterface $thing Update metadata on this thing.
      * @return ThingInterface
      */
     public function identify($data, ThingInterface $thing = null);
 
     /**
-     * @param ThingInterface $thing
-     * @param string $variant
-     * @param int $fragment
-     * @return string
+     * (relative) File path to the variant fragment.
+     *
+     * @param ThingInterface $thing The real thing
+     * @param string $variant Variant name
+     * @param int $fragment Variant fragment
+     * @param bool $relative Relative instead of absolute
+     * @return string Relative file path
      */
-    public function getVariantPath(ThingInterface $thing, $variant, $fragment = 1);
+    public function getVariantPath(ThingInterface $thing, $variant, $fragment = 1, $relative = false);
 
     /**
-     * @param ThingInterface $thing
-     * @param $variant
-     * @param $data
+     * Store the data as a variant for a thing.
+     *
+     * @param ThingInterface $thing The real thing
+     * @param string $variant Variant name
+     * @param string|\SplFileInfo $data File path (string) or file object
      * @return ThingInterface
      */
     public function storeVariant(ThingInterface $thing, $variant, $data);
 
     /**
-     * @param ThingInterface $thing
-     * @param $variant
-     * @param int $fragment
+     * Retrieve the data of the variant fragment.
+     *
+     * @param ThingInterface $thing The reak thing
+     * @param string $variant Variant name
+     * @param int $fragment Variant fragment
      * @return mixed Contents of the thing variant fragment
      */
     public function fetchVariant(ThingInterface $thing, $variant, $fragment = 1);
 
     /**
-     * @param $data
-     * @param Model\ThingInterface $thing
-     * @return ThingInterface
+     * Store the data as new thing.
+     *
+     * @param string|\SplFileInfo $data File path (string) or file object
+     * @param ThingInterface $thing Use existing metadata holder object
+     * @return ThingInterface The metadata holder object that references the data
      */
     public function store($data, ThingInterface $thing = null);
 
     /**
+     * Delete the metadata and contents.
+     *
      * @param ThingInterface $thing
      */
     public function remove(ThingInterface $thing);
 
     /**
-     * @param ThingInterface $thing
+     * Relative path to the thing fragment.
+     *
+     * @param ThingInterface $thing The real thing
      * @param int $fragment
-     * @return string
+     * @param bool $relative Relative instead of absolute
+     * @return string Relative file path
      */
-    public function getPath(ThingInterface $thing, $fragment = 1);
+    public function getPath(ThingInterface $thing, $fragment = 1, $relative = false);
 
     /**
-     * @param ThingInterface $thing
-     * @param int $fragment
-     * @return mixed Contents of the thing
+     * Retrieve the data of the thing fragment.
+     *
+     * @param ThingInterface $thing The reak thing
+     * @param int $fragment Variant fragment
+     * @return mixed Contents of the thing fragment
      */
     public function fetch(ThingInterface $thing, $fragment = 1);
 
     /**
-     * @param ThingInterface $thing
-     * @param $variant
-     * @return mixed
+     * Delete the metadata and contents of a variant.
+     *
+     * @param ThingInterface $thing The real thing
+     * @param string $variant Variant name
      */
     public function removeVariant(ThingInterface $thing, $variant);
 }
