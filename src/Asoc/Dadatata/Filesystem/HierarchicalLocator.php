@@ -4,14 +4,29 @@ namespace Asoc\Dadatata\Filesystem;
 
 use Asoc\Dadatata\Model\ThingInterface;
 
+/**
+ * Builds nested hierarchical paths based on the key property of a file metadata object.
+ *
+ * {BASEDIRECTORY}/{KEY_PART1/{KEY_PART2}/{KEY}
+ * {BASEDIRECTORY}/68/b7/68b7d0b12984dba40d5be5274144e534dfdee4bd21d144e40575e4fb7a7b6dbb_1
+ */
 class HierarchicalLocator implements LocatorInterface {
 
+    /**
+     * Root directory
+     *
+     * @var string
+     */
     protected $baseDirectory;
     /**
+     * Num of sub-directories that should be created
+     *
      * @var int
      */
     private $depth;
     /**
+     * Num of characters each sub-directory name consists of
+     *
      * @var int
      */
     private $characters;
@@ -24,10 +39,6 @@ class HierarchicalLocator implements LocatorInterface {
         $this->baseDirectory = $baseDirectory;
         $this->depth = $depth;
         $this->characters = $characters;
-    }
-
-    public function getBaseDirectory() {
-        return $this->baseDirectory;
     }
 
     public function getFilePath(ThingInterface $thing, $fragment = 1)

@@ -36,7 +36,9 @@ class Options implements OptionsInterface {
             throw new \InvalidArgumentException(sprintf('Given options to merge are not supported: %s', gettype($options)));
         }
 
-        return new self(array_replace_recursive([], $this->options, $all));
+        $class = get_class($this);
+
+        return new $class(array_replace_recursive([], $this->options, $all));
     }
 
     public function all() {

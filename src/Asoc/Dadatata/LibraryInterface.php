@@ -33,7 +33,7 @@ interface LibraryInterface
      * @param ThingInterface $thing The real thing
      * @param string $variant Variant name
      * @param string|\SplFileInfo $data File path (string) or file object
-     * @return ThingInterface
+     * @return ThingInterface The variant metadata object
      */
     public function storeVariant(ThingInterface $thing, $variant, $data);
 
