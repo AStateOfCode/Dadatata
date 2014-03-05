@@ -2,7 +2,7 @@
 
 namespace Asoc\Dadatata\Exception;
 
-
-final class FailedToGenerateVariantException extends Exception {
+final class FailedToGenerateVariantException extends Exception
+{
 
 } 

@@ -2,6 +2,8 @@
 
 namespace Asoc\Dadatata\Filesystem;
 
+use Asoc\Dadatata\Exception\FailedToStoreDataException;
+use Asoc\Dadatata\Exception\FileNotFoundException;
 use Asoc\Dadatata\Model\FilePathFragments;
 use Asoc\Dadatata\Model\ThingInterface;
 
@@ -21,11 +23,15 @@ class Store implements StoreInterface {
         $directory = $this->locator->getDirectory($thing);
         if(!is_dir($directory)) {
             if(!mkdir($directory, 0777, true)) {
-                throw new \Exception('Could not create directory');
+                throw new FailedToStoreDataException('Could not create directory');
             }
         }
 
         if($data instanceof \SplFileInfo) {
+            if(!file_exists($data->getPathname())) {
+                throw new FileNotFoundException(sprintf('Does not exist: %s', $data->getPathname()));
+            }
+
             $path = $this->getPath($thing);
             /** @var \SplFileInfo $data */
             copy($data->getPathname(), $path);
@@ -33,17 +39,25 @@ class Store implements StoreInterface {
         else if($data instanceof FilePathFragments) {
             $i = 1;
             foreach($data->getFileInfos() as $file) {
+                if(!file_exists($file->getPathname())) {
+                    throw new FileNotFoundException(sprintf('Fragment does not exist: %s (%d)', $file->getPathname(), $i));
+                }
+
                 $path = $this->getPath($thing, $i);
                 copy($file->getPathname(), $path);
                 $i++;
             }
         }
-        else if(is_string($data) && is_file($data)) {
+        else if(is_string($data)) {
+            if(!file_exists($data)) {
+                throw new FileNotFoundException(sprintf('Does not exist: %s', $data));
+            }
+
             $path = $this->getPath($thing);
             copy($data, $path);
         }
         else {
-            throw new \Exception(sprintf('Given data is not a file: %s', gettype($data)));
+            throw new FailedToStoreDataException(sprintf('Unrecognized input data: %s', gettype($data)));
         }
     }
 
@@ -52,7 +66,12 @@ class Store implements StoreInterface {
         if($asStream === true) {
             throw new \Exception('Not implemented');
         }
+
         $path = $this->locator->getFilePath($thing, $fragment);
+        if(!file_exists($path)) {
+            throw new FileNotFoundException(sprintf('Does not exist: %s', $path));
+        }
+
         return file_get_contents($path);
     }
 

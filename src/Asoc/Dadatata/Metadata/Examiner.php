@@ -2,6 +2,8 @@
 
 namespace Asoc\Dadatata\Metadata;
 
+use Asoc\Dadatata\Exception\FileNotFoundException;
+
 class Examiner implements ExaminerInterface {
 
     /**
@@ -26,6 +28,10 @@ class Examiner implements ExaminerInterface {
         }
         else {
             $path = $fileOrPath;
+        }
+
+        if(!file_exists($path)) {
+            throw new FileNotFoundException(sprintf('Does not exist: %s', $path));
         }
 
         if($mime === null) {
@@ -58,6 +64,10 @@ class Examiner implements ExaminerInterface {
         }
         else {
             $path = $fileOrPath;
+        }
+
+        if(!file_exists($path)) {
+            throw new FileNotFoundException(sprintf('Does not exist: %s', $path));
         }
 
         foreach($this->typeGuesser as $guesser) {

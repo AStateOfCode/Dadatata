@@ -3,8 +3,8 @@
 namespace Asoc\Dadatata;
 
 use Asoc\Dadatata\Exception\FailedToGenerateVariantException;
-use Asoc\Dadatata\Exception\FilterDoesNotSupportInput;
-use Asoc\Dadatata\Exception\NoFilterDefinedForVariant;
+use Asoc\Dadatata\Exception\FilterDoesNotSupportInputException;
+use Asoc\Dadatata\Exception\NoFilterDefinedForVariantException;
 use Asoc\Dadatata\Filter\OptionsInterface;
 use Asoc\Dadatata\Model\ThingInterface;
 
@@ -29,13 +29,13 @@ class AggregateVariator implements VariatorInterface {
             try {
                 return $variator->generate($thing, $variant, $sourcePath, $options);
             }
-            catch(FilterDoesNotSupportInput $e) {
+            catch(FilterDoesNotSupportInputException $e) {
                 // intenionally silenced, we try the next variator
             }
             catch(FailedToGenerateVariantException $e) {
                 // intenionally silenced, we try the next variator
             }
-            catch(NoFilterDefinedForVariant $e) {
+            catch(NoFilterDefinedForVariantException $e) {
                 // intenionally silenced, we try the next variator
             }
         }

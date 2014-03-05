@@ -2,7 +2,7 @@
 
 namespace Asoc\Dadatata\Exception;
 
-
-final class InvalidFilterOptionsException extends Exception {
+final class InvalidFilterOptionsException extends Exception
+{
 
 } 

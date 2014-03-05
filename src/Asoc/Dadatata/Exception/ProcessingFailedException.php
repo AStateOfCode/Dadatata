@@ -2,7 +2,8 @@
 
 namespace Asoc\Dadatata\Exception;
 
-final class ProcessingFailedException extends Exception {
+final class ProcessingFailedException extends Exception
+{
 
     private $stdErr;
     private $stdOut;
@@ -15,10 +16,12 @@ final class ProcessingFailedException extends Exception {
         $this->stdErr = '';
     }
 
-    public static function create($message = '', $code, $stdOut = '', $stdErr = '') {
+    public static function create($message = '', $code, $stdOut = '', $stdErr = '')
+    {
         $exception = new self($message, $code);
         $exception->stdOut = $stdOut;
         $exception->stdErr = $stdErr;
+
         return $exception;
     }
 
