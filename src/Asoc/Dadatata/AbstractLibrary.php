@@ -48,7 +48,7 @@ abstract class AbstractLibrary implements LibraryInterface {
         }
 
         $path = $this->retrievePathToData($data);
-        list($category, $mime) = $examiner->categorize($data);
+        list($category, $mime) = $examiner->categorize($path);
 
         $modelProvider = $this->getModelProvider();
 
