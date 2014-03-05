@@ -10,35 +10,45 @@ use Asoc\Dadatata\Model\ThingInterface;
 
 abstract class AbstractLibrary implements LibraryInterface {
 
-    public function identify($data, ThingInterface $thing = null) {
-        if($data === null || !isset($data)) {
-            throw new \InvalidArgumentException('Cannot identify empty data');
+    protected function retrievePathToData($data) {
+        if(empty($data)) {
+            throw new \InvalidArgumentException('Data cannot be empty');
         }
-
-        $examiner = $this->getIdentifier();
-
-        // by default, there's one file fragment
-        $fragments = 1;
 
         // if there are multiple fragments, use the first for metadata. all others are assumed to be of the same type.
         if($data instanceof FilePathFragments) {
             // first fragment is responsible for determining all the infos
             $file = $data->getFileInfos()[0];
             $path = $file->getPathname();
-            list($category, $mime) = $examiner->categorize($path);
-            $fragments = $data->getNum();
         }
         else if($data instanceof \SplFileInfo) {
             $path = $data->getPathname();
-            list($category, $mime) = $examiner->categorize($path);
         }
         else if(is_string($data) && ctype_print($data) === true) {
             $path = $data;
-            list($category, $mime) = $examiner->categorize($data);
         }
         else {
-            throw new FileNotFoundException(sprintf('Cannot itentify data, unsupported type: %s', gettype($data)));
+            throw new \InvalidArgumentException(sprintf('Unsupported type: %s', gettype($data)));
         }
+
+        if(!file_exists($path)) {
+            throw new FileNotFoundException(sprintf('Given path does not exist: %s', $path));
+        }
+
+        return $path;
+    }
+
+    public function identify($data, ThingInterface $thing = null) {
+        $examiner = $this->getIdentifier();
+
+        // by default, there's one file fragment
+        $fragments = 1;
+        if($data instanceof FilePathFragments) {
+            $fragments = $data->getNum();
+        }
+
+        $path = $this->retrievePathToData($data);
+        list($category, $mime) = $examiner->categorize($data);
 
         $modelProvider = $this->getModelProvider();
 
