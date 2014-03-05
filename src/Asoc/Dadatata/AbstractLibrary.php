@@ -2,6 +2,7 @@
 
 namespace Asoc\Dadatata;
 
+use Asoc\Dadatata\Exception\FileNotFoundException;
 use Asoc\Dadatata\Metadata\ExaminerInterface;
 use Asoc\Dadatata\Model\FilePathFragments;
 use Asoc\Dadatata\Model\ModelProviderInterface;
@@ -31,27 +32,12 @@ abstract class AbstractLibrary implements LibraryInterface {
             $path = $data->getPathname();
             list($category, $mime) = $examiner->categorize($path);
         }
-        // check if a blob or something different has been passed here
+        else if(is_string($data) && ctype_print($data) === true) {
+            $path = $data;
+            list($category, $mime) = $examiner->categorize($data);
+        }
         else {
-            // not a file, assuming arbitrary data. we need to store the data in a temporary file so all the tools
-            // can operate on it
-            if(is_string($data) && ctype_print($data) === true && !is_file($data)) {
-                $path = tempnam(sys_get_temp_dir(), 'dadatata');
-                file_put_contents($path, $data);
-            }
-            else if(is_file($data)) {
-                $path = realpath($data);
-            }
-            else {
-                throw new \InvalidArgumentException(sprintf('Cannot itentify data, unsupported type: %s', gettype($data)));
-            }
-
-            if($path !== null && file_exists($path)) {
-                list($category, $mime) = $examiner->categorize($data);
-            }
-            else {
-                throw new \InvalidArgumentException(sprintf('Cannot identify data, file does not exist: %s', gettype($data)));
-            }
+            throw new FileNotFoundException(sprintf('Cannot itentify data, unsupported type: %s', gettype($data)));
         }
 
         $modelProvider = $this->getModelProvider();
