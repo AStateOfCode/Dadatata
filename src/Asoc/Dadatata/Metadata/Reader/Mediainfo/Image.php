@@ -55,9 +55,4 @@ class Image extends BaseReader {
             && (string)$mediaInfo->File->track[1]->attributes()['type'] === 'Image';
     }
 
-    public function getCategory()
-    {
-        return ReaderInterface::CATEGORY_IMAGE;
-    }
-
 }

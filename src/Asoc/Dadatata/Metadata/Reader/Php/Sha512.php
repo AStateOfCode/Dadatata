@@ -17,9 +17,4 @@ class Sha512 implements ReaderInterface {
         $result[ReaderInterface::HASH_SHA512] = hash_file('sha512', $path);
         return $result;
     }
-
-    public function getCategory()
-    {
-        return null;
-    }
 }

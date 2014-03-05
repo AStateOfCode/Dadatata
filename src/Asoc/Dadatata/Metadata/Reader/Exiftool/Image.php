@@ -92,9 +92,4 @@ class Image implements ReaderInterface {
         return $result;
     }
 
-    public function getCategory()
-    {
-        return ReaderInterface::CATEGORY_IMAGE;
-    }
-
 }

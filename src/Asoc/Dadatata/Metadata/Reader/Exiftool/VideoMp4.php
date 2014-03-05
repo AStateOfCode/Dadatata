@@ -23,11 +23,6 @@ class VideoMp4 extends BaseReader {
         return $mime === 'video/mp4';
     }
 
-    public function getCategory()
-    {
-        return ReaderInterface::CATEGORY_VIDEO;
-    }
-
     protected function getMap()
     {
         return static::$map;

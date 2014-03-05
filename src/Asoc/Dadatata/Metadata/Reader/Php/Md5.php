@@ -17,9 +17,4 @@ class Md5 implements ReaderInterface {
         $result[ReaderInterface::HASH_MD5] = md5_file($path);
         return $result;
     }
-
-    public function getCategory()
-    {
-        return null;
-    }
 }

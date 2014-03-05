@@ -69,9 +69,4 @@ class VideoFlash implements ReaderInterface {
         return $result;
     }
 
-    public function getCategory()
-    {
-        return ReaderInterface::CATEGORY_VIDEO;
-    }
-
 }

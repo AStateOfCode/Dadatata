@@ -17,9 +17,4 @@ class Sha1 implements ReaderInterface {
         $result[ReaderInterface::HASH_SHA1] = sha1_file($path);
         return $result;
     }
-
-    public function getCategory()
-    {
-        return null;
-    }
 }
