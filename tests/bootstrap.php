@@ -5,5 +5,5 @@ if ( ! is_file($autoloadFile = __DIR__.'/../vendor/autoload.php')) {
     exit(1);
 }
 
-$loader = require_once $autoloadFile;
-$loader->add('Asoc\\Tests\\Dadatata', __DIR__, true);
+$loader = require $autoloadFile;
+$loader->add('Asoc\Tests\Dadatata', __DIR__, true);
