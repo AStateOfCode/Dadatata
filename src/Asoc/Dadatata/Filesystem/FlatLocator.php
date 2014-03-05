@@ -23,7 +23,7 @@ class FlatLocator implements LocatorInterface {
 
     public function getFilePath(ThingInterface $thing, $fragment = 1)
     {
-        return sprintf('%s/%s', $this->baseDirectory, $this->getRelativeFilePath($thing));
+        return sprintf('%s/%s', $this->baseDirectory, $this->getRelativeFilePath($thing, $fragment));
     }
 
     public function getRelativeFilePath(ThingInterface $thing, $fragment = 1) {
