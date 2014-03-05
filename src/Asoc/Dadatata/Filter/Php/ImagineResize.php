@@ -2,6 +2,7 @@
 
 namespace Asoc\Dadatata\Filter\Php;
 
+use Asoc\Dadatata\Exception\ProcessingFailedException;
 use Asoc\Dadatata\Filter\BaseImageFilter;
 use Asoc\Dadatata\Filter\OptionsInterface;
 use Asoc\Dadatata\Model\ImageInterface;
@@ -50,7 +51,12 @@ class ImagineResize extends BaseImageFilter {
             'quality' => $options->getQuality()
         ]);
 
-        $transformation->apply($image);
+        try {
+            $transformation->apply($image);
+        }
+        catch(\Exception $e) {
+            throw new ProcessingFailedException('Failed to create image: '.$e->getMessage());
+        }
 
         return [$tmpPath];
     }

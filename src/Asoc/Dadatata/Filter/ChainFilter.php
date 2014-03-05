@@ -50,6 +50,8 @@ class ChainFilter implements FilterInterface {
      */
     public function setOptions(OptionsInterface $options)
     {
-
+        foreach($this->filters as $filter) {
+            $filter->setOptions($options);
+        }
     }
 }
