@@ -56,8 +56,8 @@ class Examiner implements ExaminerInterface {
 
     public function categorize($fileOrPath, $mime = null)
     {
-        // TODO mime weight
         $categories = [];
+        $mimes = [];
 
         if($fileOrPath instanceof \SplFileInfo) {
             $path = $fileOrPath->getPathname();
@@ -71,8 +71,13 @@ class Examiner implements ExaminerInterface {
         }
 
         foreach($this->typeGuesser as $guesser) {
-            if($mime === null) {
-                $mime = $guesser->getMimeType($path);
+            $mime = $guesser->getMimeType($path);
+
+            if(!isset($mimes[$mime])) {
+                $mimes[$mime] = 1;
+            }
+            else {
+                $mimes[$mime]++;
             }
 
             $category = $guesser->categorize($path, $mime);
@@ -94,6 +99,14 @@ class Examiner implements ExaminerInterface {
         }
         else {
             $category = null;
+        }
+
+        if(count($mimes) > 0) {
+            arsort($mimes);
+            $mime = array_keys($mimes)[0];
+        }
+        else {
+            $mime = null;
         }
 
         return [$category, $mime];
