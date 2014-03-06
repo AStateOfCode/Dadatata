@@ -22,13 +22,13 @@ class Store implements StoreInterface {
     {
         $directory = $this->locator->getDirectory($thing);
         if(!is_dir($directory)) {
-            if(!mkdir($directory, 0777, true)) {
-                throw new FailedToStoreDataException('Could not create directory');
+            if(true !== @mkdir($directory, 0777, true)) {
+                throw new FailedToStoreDataException(sprintf('Could not create directory: %s', $directory));
             }
         }
 
         if(!is_writable($directory)) {
-            throw new FailedToStoreDataException('Cannot store file, directory not writable');
+            throw new FailedToStoreDataException(sprintf('Cannot store file, directory not writable: %s', $directory));
         }
 
         if($data instanceof \SplFileInfo) {
@@ -39,7 +39,9 @@ class Store implements StoreInterface {
             $path = $this->getPath($thing);
 
             /** @var \SplFileInfo $data */
-            copy($data->getPathname(), $path);
+            if(!copy($data->getPathname(), $path)) {
+                throw new FailedToStoreDataException('Could not copy data');
+            }
         }
         else if($data instanceof FilePathFragments) {
             $i = 1;
@@ -50,7 +52,9 @@ class Store implements StoreInterface {
 
                 $path = $this->getPath($thing, $i);
 
-                copy($file->getPathname(), $path);
+                if(!copy($file->getPathname(), $path)) {
+                    throw new FailedToStoreDataException('Could not copy data');
+                }
                 $i++;
             }
         }
@@ -61,7 +65,9 @@ class Store implements StoreInterface {
 
             $path = $this->getPath($thing);
 
-            copy($data, $path);
+            if(!copy($data, $path)) {
+                throw new FailedToStoreDataException('Could not copy data');
+            }
         }
         else {
             throw new FailedToStoreDataException(sprintf('Unrecognized input data: %s', gettype($data)));
