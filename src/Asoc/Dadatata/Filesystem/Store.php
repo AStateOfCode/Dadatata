@@ -27,12 +27,17 @@ class Store implements StoreInterface {
             }
         }
 
+        if(!is_writable($directory)) {
+            throw new FailedToStoreDataException('Cannot store file, directory not writable');
+        }
+
         if($data instanceof \SplFileInfo) {
             if(!file_exists($data->getPathname())) {
                 throw new FileNotFoundException(sprintf('Does not exist: %s', $data->getPathname()));
             }
 
             $path = $this->getPath($thing);
+
             /** @var \SplFileInfo $data */
             copy($data->getPathname(), $path);
         }
@@ -44,6 +49,7 @@ class Store implements StoreInterface {
                 }
 
                 $path = $this->getPath($thing, $i);
+
                 copy($file->getPathname(), $path);
                 $i++;
             }
@@ -54,6 +60,7 @@ class Store implements StoreInterface {
             }
 
             $path = $this->getPath($thing);
+
             copy($data, $path);
         }
         else {
@@ -80,6 +87,9 @@ class Store implements StoreInterface {
         for($i = 1, $n = $thing->getFragments(); $i <= $n; $i++) {
             $path = $this->locator->getFilePath($thing, $i);
             if(file_exists($path)) {
+                if(!is_writable($path)) {
+                    throw new FailedToStoreDataException('Cannot delete file (permission denied)');
+                }
                 unlink($path);
             }
         }
