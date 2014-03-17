@@ -43,7 +43,7 @@ class ImagineResize extends BaseImageFilter {
 
         $size = new Box($width, $height);
 
-        $transformation = $this->getTransformation($image, $size);
+        $transformation = $this->getTransformation($image, $size, $options);
 
         $tmpPath = tempnam(sys_get_temp_dir(), 'Dadatata');
         $transformation->save($tmpPath, [
