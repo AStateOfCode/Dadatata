@@ -13,17 +13,36 @@ class Store implements StoreInterface {
      * @var LocatorInterface
      */
     protected $locator;
+    /**
+     * @var int
+     */
+    private $chmodDirectories;
+    /**
+     * @var int
+     */
+    private $chmodFiles;
+    /**
+     * @var null
+     */
+    private $chgrp;
 
-    public function __construct(LocatorInterface $locator) {
+    public function __construct(LocatorInterface $locator, $chmodDirectories = 755, $chmodFiles = 644, $chgrp = null) {
         $this->locator = $locator;
+        $this->chmodDirectories = octdec($chmodDirectories);
+        $this->chmodFiles = octdec($chmodFiles);
+        $this->chgrp = $chgrp;
     }
 
     public function save(ThingInterface $thing, $data)
     {
         $directory = $this->locator->getDirectory($thing);
         if(!is_dir($directory)) {
-            if(true !== @mkdir($directory, 0777, true)) {
+            if(true !== @mkdir($directory, $this->chmodDirectories, true)) {
                 throw new FailedToStoreDataException(sprintf('Could not create directory: %s', $directory));
+            }
+
+            if(null !== $this->chgrp) {
+                chgrp($directory, $this->chgrp);
             }
         }
 
@@ -42,6 +61,11 @@ class Store implements StoreInterface {
             if(!copy($data->getPathname(), $path)) {
                 throw new FailedToStoreDataException('Could not copy data');
             }
+
+            chmod($path, $this->chmodFiles);
+            if(null !== $this->chgrp) {
+                chgrp($path, $this->chgrp);
+            }
         }
         else if($data instanceof FilePathFragments) {
             $i = 1;
@@ -55,6 +79,12 @@ class Store implements StoreInterface {
                 if(!copy($file->getPathname(), $path)) {
                     throw new FailedToStoreDataException('Could not copy data');
                 }
+
+                chmod($path, $this->chmodFiles);
+                if(null !== $this->chgrp) {
+                    chgrp($path, $this->chgrp);
+                }
+
                 $i++;
             }
         }
@@ -67,6 +97,11 @@ class Store implements StoreInterface {
 
             if(!copy($data, $path)) {
                 throw new FailedToStoreDataException('Could not copy data');
+            }
+
+            chmod($path, $this->chmodFiles);
+            if(null !== $this->chgrp) {
+                chgrp($path, $this->chgrp);
             }
         }
         else {
