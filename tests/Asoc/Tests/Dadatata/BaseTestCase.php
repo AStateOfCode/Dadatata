@@ -5,6 +5,8 @@ namespace Asoc\Tests\Dadatata;
 use Asoc\Dadatata\Filesystem\FlatLocator;
 use Asoc\Dadatata\Model\ImageInterface;
 use Asoc\Dadatata\Model\ThingInterface;
+use Asoc\Dadatata\ToolInterface;
+use Neutron\TemporaryFilesystem\Manager;
 use Symfony\Component\Process\ExecutableFinder;
 
 abstract class BaseTestCase extends \PHPUnit_Framework_TestCase {
@@ -12,6 +14,15 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase {
     protected $tempFiles;
 
     protected $tempStores;
+
+    protected $tmpFs;
+
+    protected function getTmpFs() {
+        if(null === $this->tmpFs) {
+            $this->tmpFs = Manager::create();
+        }
+        return $this->tmpFs;
+    }
 
     protected function createTempFile()
     {
@@ -59,6 +70,12 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase {
         }
     }
 
+    protected function markTestSkippedIfToolIsNotAvailable($name, ToolInterface $tool = null) {
+        if(null === $tool) {
+            $this->markTestSkipped(sprintf('Tool is not available: %s', $name));
+        }
+    }
+
     protected function skipIfToolIsNotAvailable($name, $message) {
         $executableFinder = new ExecutableFinder();
         $path = $executableFinder->find($name);
@@ -97,6 +114,26 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase {
         return $dir;
     }
 
+    protected function createDocumentMock($key = null) {
+        $thing = $this->getMockForAbstractClass('Asoc\Tests\Dadatata\Model\DocumentMock');
+
+        if(null !== $key) {
+            $thing->expects($this->any())->method('getKey')->will($this->returnValue($key));
+        }
+
+        return $thing;
+    }
+
+    protected function createImageMock($key = null) {
+        $thing = $this->getMockForAbstractClass('Asoc\Tests\Dadatata\Model\ImageMock');
+
+        if(null !== $key) {
+            $thing->expects($this->any())->method('getKey')->will($this->returnValue($key));
+        }
+
+        return $thing;
+    }
+
     protected function createEmptyThingMock() {
         return $this->getMockForAbstractClass('Asoc\Tests\Dadatata\Model\ImageMock');
     }
@@ -108,6 +145,18 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase {
     protected function createTempLocator() {
         // don't create the directory, the locator should do it
         return new FlatLocator($this->createTempDirectory(false));
+    }
+
+    protected function assertMime($filePath, array $mimes) {
+        try {
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $actualMime = $finfo->file($filePath);
+        }
+        catch(\Exception $e) {
+            $actualMime = 'couldNotReadMime';
+        }
+
+        $this->assertTrue(in_array($actualMime, $mimes));
     }
 
 } 

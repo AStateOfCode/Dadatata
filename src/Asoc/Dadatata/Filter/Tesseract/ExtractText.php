@@ -7,21 +7,28 @@ use Asoc\Dadatata\Filter\FilterInterface;
 use Asoc\Dadatata\Filter\OptionsInterface;
 use Asoc\Dadatata\Model\ImageInterface;
 use Asoc\Dadatata\Model\ThingInterface;
-use Symfony\Component\Process\ProcessBuilder;
+use Asoc\Dadatata\Tool\Tesseract;
+use Asoc\Dadatata\ToolInterface;
+use Neutron\TemporaryFilesystem\TemporaryFilesystemInterface;
 
 class ExtractText implements FilterInterface {
 
     /**
-     * @var string
+     * @var \Asoc\Dadatata\ToolInterface|Tesseract
      */
-    private $bin;
+    private $tesseract;
+    /**
+     * @var \Neutron\TemporaryFilesystem\TemporaryFilesystemInterface
+     */
+    private $tmpFs;
     /**
      * @var OcrOptions
      */
     private $defaults;
 
-    public function __construct($bin = '/usr/bin/tesseract') {
-        $this->bin = $bin;
+    public function __construct(ToolInterface $tesseract, TemporaryFilesystemInterface $tmpFs) {
+        $this->tesseract = $tesseract;
+        $this->tmpFs = $tmpFs;
     }
 
     /**
@@ -33,15 +40,16 @@ class ExtractText implements FilterInterface {
      */
     public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null)
     {
-        $tmpPath = tempnam(sys_get_temp_dir(), 'Dadatata');
+        $tmpDir = $this->tmpFs->createTemporaryDirectory();
+        $tmpFile = $tmpDir.DIRECTORY_SEPARATOR.$thing->getKey();
 
         /** @var OcrOptions $options */
         $options = $this->defaults->merge($options);
 
-        $pb = new ProcessBuilder([$this->bin]);
-        $pb->add('-l')->add($options->getLanguage());
-        $pb->add($sourcePath);
-        $pb->add($tmpPath);
+        $pb = $this->tesseract->getProcessBuilder()
+            ->language($options->getLanguage())
+            ->source($sourcePath)
+            ->output($tmpFile);
 
         $process = $pb->getProcess();
 
@@ -50,7 +58,7 @@ class ExtractText implements FilterInterface {
             throw ProcessingFailedException::create('Failed to convert image to text', $code, $process->getOutput(), $process->getErrorOutput());
         }
 
-        return [$tmpPath];
+        return [$tmpFile];
     }
 
     /**

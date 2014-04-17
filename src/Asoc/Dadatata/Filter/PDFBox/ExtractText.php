@@ -1,23 +1,29 @@
 <?php
 
-
 namespace Asoc\Dadatata\Filter\PDFBox;
 
 use Asoc\Dadatata\Exception\ProcessingFailedException;
 use Asoc\Dadatata\Filter\FilterInterface;
 use Asoc\Dadatata\Filter\OptionsInterface;
 use Asoc\Dadatata\Model\ThingInterface;
-use Symfony\Component\Process\ProcessBuilder;
+use Asoc\Dadatata\Tool\PdfBox;
+use Asoc\Dadatata\ToolInterface;
+use Neutron\TemporaryFilesystem\TemporaryFilesystemInterface;
 
 class ExtractText implements FilterInterface {
 
     /**
-     * @var string
+     * @var \Asoc\Dadatata\ToolInterface|PdfBox
      */
-    private $bin;
+    private $pdfBox;
+    /**
+     * @var \Neutron\TemporaryFilesystem\TemporaryFilesystemInterface
+     */
+    private $tmpFs;
 
-    public function __construct($bin = '/usr/bin/pdfbox') {
-        $this->bin = $bin;
+    public function __construct(ToolInterface $pdfBox, TemporaryFilesystemInterface $tmpFs) {
+        $this->pdfBox = $pdfBox;
+        $this->tmpFs = $tmpFs;
     }
 
     /**
@@ -29,13 +35,13 @@ class ExtractText implements FilterInterface {
      */
     public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null)
     {
-        $tmpPath = tempnam(sys_get_temp_dir(), 'Dadatata');
+        $tmpDir = $this->tmpFs->createTemporaryDirectory();
+        $tmpFile = $tmpDir.DIRECTORY_SEPARATOR.$thing->getKey();
 
-        $pb = new ProcessBuilder([$this->bin]);
-        $pb->add('ExtractText');
-        $pb->add($sourcePath);
-        $pb->add($tmpPath);
-
+        $pb = $this->pdfBox->getProcessBuilder()
+            ->extractText()
+            ->source($sourcePath)
+            ->output($tmpFile);
         $process = $pb->getProcess();
 
         $code = $process->run();
@@ -43,7 +49,7 @@ class ExtractText implements FilterInterface {
             throw ProcessingFailedException::create('Failed to convert PDF to text', $code, $process->getOutput(), $process->getErrorOutput());
         }
 
-        return [$tmpPath];
+        return [$tmpFile];
     }
 
     /**

@@ -7,23 +7,30 @@ use Asoc\Dadatata\Filter\DocumentOptions;
 use Asoc\Dadatata\Filter\FilterInterface;
 use Asoc\Dadatata\Filter\OptionsInterface;
 use Asoc\Dadatata\Model\DocumentInterface;
+use Asoc\Dadatata\Model\ImageInterface;
 use Asoc\Dadatata\Model\ThingInterface;
-use Symfony\Component\Process\ProcessBuilder;
+use Asoc\Dadatata\Tool\Unoconv;
+use Asoc\Dadatata\ToolInterface;
+use Neutron\TemporaryFilesystem\TemporaryFilesystemInterface;
 
 class Convert implements FilterInterface {
 
+	/**
+	 * @var \Asoc\Dadatata\ToolInterface|Unoconv
+	 */
+	private $unoconv;
     /**
-     * @var
+     * @var \Neutron\TemporaryFilesystem\TemporaryFilesystemInterface
      */
-    private $bin;
-
+    private $tmpFs;
     /**
      * @var DocumentOptions
      */
     private $defaults;
 
-    public function __construct($bin) {
-        $this->bin = $bin;
+    public function __construct(ToolInterface $unoconv, TemporaryFilesystemInterface $tmpFs) {
+		$this->unoconv = $unoconv;
+        $this->tmpFs = $tmpFs;
     }
 
     /**
@@ -46,16 +53,16 @@ class Convert implements FilterInterface {
      */
     public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null)
     {
-        $tmpPath = tempnam(sys_get_temp_dir(), 'Dadatata');
+        $tmpDir = $this->tmpFs->createTemporaryDirectory();
+        $tmpFile = $tmpDir.DIRECTORY_SEPARATOR.$thing->getKey();
 
+        /** @var DocumentOptions $options */
         $options = $this->defaults->merge($options);
 
-        $pb = new ProcessBuilder([
-            $this->bin
-        ]);
-        $pb->add('--format')->add($options->getFormat());
-        $pb->add('--output')->add($tmpPath);
-        $pb->add($sourcePath);
+        $pb = $this->unoconv->getProcessBuilder()
+            ->format($options->getFormat())
+            ->output($tmpFile)
+            ->input($sourcePath);
         $process = $pb->getProcess();
 
         $code = $process->run();
@@ -63,7 +70,7 @@ class Convert implements FilterInterface {
             throw ProcessingFailedException::create('Failed to convert document to PDF', $code, $process->getOutput(), $process->getErrorOutput());
         }
 
-        return [$tmpPath];
+        return [$tmpFile];
     }
 
     /**
@@ -72,7 +79,7 @@ class Convert implements FilterInterface {
      */
     public function canHandle(ThingInterface $thing)
     {
-        return $thing instanceof DocumentInterface;
+        return $thing instanceof DocumentInterface || $thing instanceof ImageInterface;
     }
 
 }
