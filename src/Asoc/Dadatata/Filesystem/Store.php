@@ -136,6 +136,12 @@ class Store implements StoreInterface {
         }
     }
 
+    public function exists(ThingInterface $thing, $fragment = 1)
+    {
+        $path = $this->locator->getFilePath($thing, $fragment);
+        return file_exists($path);
+    }
+
     public function getPath(ThingInterface $thing, $fragment = 1, $relative = false) {
         if($relative) {
             return $this->locator->getRelativeFilePath($thing, $fragment);
