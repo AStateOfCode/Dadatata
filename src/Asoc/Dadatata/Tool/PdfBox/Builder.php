@@ -21,4 +21,11 @@ class Builder extends ProcessBuilder {
         return new ExtractTextBuilder([$this->bin, 'ExtractText']);
     }
 
+    /**
+     * @return MergerBuilder
+     */
+    public function merger() {
+        return new MergerBuilder([$this->bin, 'PDFMerger']);
+    }
+
 }
