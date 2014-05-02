@@ -1,10 +1,10 @@
 <?php
 
-namespace Asoc\Dadatata\Tool;
+namespace Asoc\Dadatata\Tool\PdfBox;
 
 use Symfony\Component\Process\ProcessBuilder;
 
-class PdfBoxBuilder extends ProcessBuilder {
+class Builder extends ProcessBuilder {
 
     private $bin;
 
@@ -15,10 +15,10 @@ class PdfBoxBuilder extends ProcessBuilder {
     }
 
     /**
-     * @return PdfBoxExtractTextBuilder
+     * @return ExtractTextBuilder
      */
     public function extractText() {
-        return new PdfBoxExtractTextBuilder([$this->bin, 'ExtractText']);
+        return new ExtractTextBuilder([$this->bin, 'ExtractText']);
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace Asoc\Dadatata\Tool;
 
+use Asoc\Dadatata\Tool\PdfBox\Builder;
 use Asoc\Dadatata\ToolInterface;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\ProcessBuilder;
@@ -40,11 +41,11 @@ class PdfBox implements ToolInterface {
     }
 
     /**
-     * @return ProcessBuilder|PdfBoxBuilder
+     * @return ProcessBuilder|Builder
      */
     public function getProcessBuilder()
     {
-        $pb = new PdfBoxBuilder([$this->bin]);
+        $pb = new Builder([$this->bin]);
         return $pb;
     }
 
@@ -54,7 +55,7 @@ class PdfBox implements ToolInterface {
     public function getVersion()
     {
         if (null === $this->version) {
-            $pb = new PdfBoxBuilder([$this->bin]);
+            $pb = new Builder([$this->bin]);
             $process = $pb->getProcess();
             $process->run();
             if (preg_match('/PDFDBox\sversion:\s"([\d\.]+)"/', $process->getErrorOutput(), $version)) {

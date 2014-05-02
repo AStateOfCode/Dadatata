@@ -1,8 +1,8 @@
 <?php
 
-namespace Asoc\Dadatata\Tool;
+namespace Asoc\Dadatata\Tool\PdfBox;
 
-class PdfBoxExtractTextBuilder extends PdfBoxBuilder {
+class ExtractTextBuilder extends BaseBuilder {
 
     private $outputFile;
     private $sourceFile;
