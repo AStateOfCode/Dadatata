@@ -8,21 +8,28 @@ use Asoc\Dadatata\Filter\DocumentImageOptions;
 use Asoc\Dadatata\Filter\FilterInterface;
 use Asoc\Dadatata\Filter\OptionsInterface;
 use Asoc\Dadatata\Model\ThingInterface;
-use Symfony\Component\Process\ProcessBuilder;
+use Asoc\Dadatata\Tool\PdfBox;
+use Asoc\Dadatata\ToolInterface;
+use Neutron\TemporaryFilesystem\TemporaryFilesystemInterface;
 
 class PdfToImage implements FilterInterface {
 
     /**
-     * @var string
+     * @var \Asoc\Dadatata\ToolInterface|PdfBox
      */
-    private $bin;
+    private $pdfBox;
     /**
-     * @var DocumentImageOptions
+     * @var \Neutron\TemporaryFilesystem\TemporaryFilesystemInterface
+     */
+    private $tmpFs;
+    /**
+     * @var OptionsInterface
      */
     private $defaults;
 
-    public function __construct($bin = '/usr/bin/pdfbox') {
-        $this->bin = $bin;
+    public function __construct(ToolInterface $pdfBox, TemporaryFilesystemInterface $tmpFs) {
+        $this->pdfBox = $pdfBox;
+        $this->tmpFs = $tmpFs;
     }
 
     /**
@@ -34,14 +41,16 @@ class PdfToImage implements FilterInterface {
      */
     public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null)
     {
-        $tmpPath = tempnam(sys_get_temp_dir(), 'Dadatata');
+        $tmpDir = $this->tmpFs->createTemporaryDirectory();
 
         /** @var DocumentImageOptions $options */
         $options = $this->defaults->merge($options);
 
-        $pb = new ProcessBuilder([$this->bin]);
-        $pb->add('PDFToImage');
-        $pb->add('-imageType')->add($options->getFormat());
+        $pb = $this->pdfBox->getProcessBuilder()
+            ->toImage()
+            ->imageType($options->getFormat())
+            ->output($tmpDir)
+            ->source($sourcePath);
 
         if($options->has($options::OPTION_PAGES)) {
             $pages = $options->getPages();
@@ -67,15 +76,12 @@ class PdfToImage implements FilterInterface {
                 }
             }
 
-            $pb->add('-startPage')->add($startPage);
+            $pb->startPage($startPage);
 
             if(isset($endPage)) {
-                $pb->add('-endPage')->add($endPage);
+                $pb->endPage($endPage);
             }
         }
-
-        $pb->add('-outputPrefix')->add($tmpPath);
-        $pb->add($sourcePath);
 
         $process = $pb->getProcess();
 
@@ -84,17 +90,9 @@ class PdfToImage implements FilterInterface {
             throw ProcessingFailedException::create('Failed to convert PDF to image', $code, $process->getOutput(), $process->getErrorOutput());
         }
 
-        if(isset($endPage)) {
-            $tmpPaths = [];
-            for($i = $startPage, $n = $endPage; $i < $n; $i++) {
-                $tmpPaths[] = sprintf('%s%d.%s', $tmpPath, $i, $options->getFormat());
-            }
+        $outputFiles = glob($tmpDir.'*.jpg');
 
-            return $tmpPaths;
-        }
-        else {
-            return [sprintf('%s1.%s', $tmpPath, $options->getFormat())];
-        }
+        return $outputFiles;
     }
 
     /**

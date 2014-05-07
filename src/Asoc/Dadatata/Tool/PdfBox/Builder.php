@@ -28,4 +28,11 @@ class Builder extends ProcessBuilder {
         return new MergerBuilder([$this->bin, 'PDFMerger']);
     }
 
+    /**
+     * @return ToImageBuilder
+     */
+    public function toImage() {
+        return new ToImageBuilder([$this->bin, 'PDFToImage']);
+    }
+
 }
