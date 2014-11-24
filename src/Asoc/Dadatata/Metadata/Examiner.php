@@ -73,6 +73,10 @@ class Examiner implements ExaminerInterface {
         foreach($this->typeGuesser as $guesser) {
             $mime = $guesser->getMimeType($path);
 
+            if(empty($mime)) {
+                continue;
+            }
+
             if(!isset($mimes[$mime])) {
                 $mimes[$mime] = 1;
             }
