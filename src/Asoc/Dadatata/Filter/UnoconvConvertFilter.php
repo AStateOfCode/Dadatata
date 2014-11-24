@@ -2,13 +2,13 @@
 
 namespace Asoc\Dadatata\Filter\Document;
 
+use Asoc\Dadatata\Filter\FilterInterface;
 use Asoc\Dadatata\Model\ImageInterface;
 use Asoc\Dadatata\Model\ThingInterface;
-use Asoc\Dadatata\Filter\FilterInterface;
 use Symfony\Component\Process\ProcessBuilder;
 
-class UnoconvConvertFilter implements FilterInterface {
-
+class UnoconvConvertFilter implements FilterInterface
+{
     /**
      * @var string
      */
@@ -18,8 +18,9 @@ class UnoconvConvertFilter implements FilterInterface {
      */
     private $format;
 
-    public function __construct($bin = '/usr/bin/unoconv') {
-        $this->bin = $bin;
+    public function __construct($bin = '/usr/bin/unoconv')
+    {
+        $this->bin    = $bin;
         $this->format = 'pdf';
     }
 
@@ -38,10 +39,12 @@ class UnoconvConvertFilter implements FilterInterface {
 
     /**
      * @param ThingInterface|ImageInterface $thing
-     * @param string $sourcePath
+     * @param string                        $sourcePath
+     *
      * @return string
      */
-    public function process(ThingInterface $thing, $sourcePath) {
+    public function process(ThingInterface $thing, $sourcePath)
+    {
         $tmpPath = tempnam(sys_get_temp_dir(), 'Dadatata');
 
         $pb = new ProcessBuilder([$this->bin]);
@@ -50,12 +53,11 @@ class UnoconvConvertFilter implements FilterInterface {
         $pb->add($sourcePath);
 
         $process = $pb->getProcess();
-        $code = $process->run();
+        $code    = $process->run();
 
         $x = $process->getOutput();
         $y = $process->getErrorOutput();
 
         return [$tmpPath];
     }
-
 }

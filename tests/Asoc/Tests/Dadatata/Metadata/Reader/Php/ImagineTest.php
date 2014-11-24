@@ -6,9 +6,10 @@ use Asoc\Dadatata\Metadata\Reader\Php\Imagine;
 use Asoc\Dadatata\Metadata\ReaderInterface;
 use Asoc\Tests\Dadatata\BaseTestCase;
 
-class ImagineTest extends BaseTestCase {
-
-    public function testExtract() {
+class ImagineTest extends BaseTestCase
+{
+    public function testExtract()
+    {
         $this->markSkippedIfNotAvailable();
         $reader = $this->createReader();
 
@@ -20,13 +21,15 @@ class ImagineTest extends BaseTestCase {
         $this->assertEquals(42, $result[ReaderInterface::IMAGE_HEIGHT]);
     }
 
-    protected function markSkippedIfNotAvailable() {
-        if(!interface_exists('Imagine\Image\ImagineInterface')) {
+    protected function markSkippedIfNotAvailable()
+    {
+        if (!interface_exists('Imagine\Image\ImagineInterface')) {
             $this->markTestSkipped('Imagine library not available');
         }
     }
 
-    protected function createReader() {
+    protected function createReader()
+    {
         $size = $this->getMock('Imagine\Image\BoxInterface');
         $size->expects($this->any())->method('getWidth')->will($this->returnValue(1337));
         $size->expects($this->any())->method('getHeight')->will($this->returnValue(42));
@@ -39,5 +42,4 @@ class ImagineTest extends BaseTestCase {
 
         return new Imagine($imagine);
     }
-
-} 
+}

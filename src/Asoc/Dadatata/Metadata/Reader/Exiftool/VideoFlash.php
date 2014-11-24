@@ -10,15 +10,15 @@ use PHPExiftool\Reader;
 use Asoc\Dadatata\Metadata\ReaderInterface;
 use Monolog\Logger;
 
-class VideoFlash implements ReaderInterface {
-
+class VideoFlash implements ReaderInterface
+{
     private static $map = [
         'Flash' => [
-            'ImageWidth' => ReaderInterface::VIDEO_WIDTH,
-            'ImageHeight' => ReaderInterface::VIDEO_HEIGHT,
+            'ImageWidth'    => ReaderInterface::VIDEO_WIDTH,
+            'ImageHeight'   => ReaderInterface::VIDEO_HEIGHT,
             'TotalDuration' => ReaderInterface::VIDEO_DURATION,
-            'VideoBitrate' => ReaderInterface::VIDEO_BITRATE,
-            'FrameRate' => ReaderInterface::VIDEO_FRAMERATE,
+            'VideoBitrate'  => ReaderInterface::VIDEO_BITRATE,
+            'FrameRate'     => ReaderInterface::VIDEO_FRAMERATE,
             'VideoEncoding' => ReaderInterface::VIDEO_CODEC
         ]
     ];
@@ -30,27 +30,26 @@ class VideoFlash implements ReaderInterface {
 
     public function extract($path)
     {
-        $reader = \PHPExiftool\Reader::create(new Logger('ignore'));
+        $reader   = \PHPExiftool\Reader::create(new Logger('ignore'));
         $metadata = $reader->files([$path])->first();
-        $result = [];
+        $result   = [];
 
         /** @var \PHPExiftool\Driver\Metadata\MetaData $meta */
-        foreach ($metadata as $meta)
-        {
+        foreach ($metadata as $meta) {
             /** @var \PHPExiftool\Driver\TagInterface $tag */
-            $tag = $meta->getTag();
+            $tag       = $meta->getTag();
             $groupName = $tag->getGroupName();
-            $tagName = $tag->getName();
+            $tagName   = $tag->getName();
 
-            if(!isset(static::$map[$groupName])) {
+            if (!isset(static::$map[$groupName])) {
                 continue;
             }
             $group = static::$map[$groupName];
-            if(!isset($group[$tagName])) {
+            if (!isset($group[$tagName])) {
                 continue;
             }
 
-            switch($tagName) {
+            switch ($tagName) {
                 case 'TotalDuration':
                     $value = floatval($meta->getValue()->asString());
                     break;
@@ -68,5 +67,4 @@ class VideoFlash implements ReaderInterface {
 
         return $result;
     }
-
 }

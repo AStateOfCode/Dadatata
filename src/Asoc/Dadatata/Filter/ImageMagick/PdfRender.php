@@ -8,21 +8,23 @@ use Asoc\Dadatata\Filter\DocumentImageOptions;
 use Asoc\Dadatata\Filter\OptionsInterface;
 use Asoc\Dadatata\Model\ThingInterface;
 
-class PdfRender extends BaseMagickFilter {
-
+class PdfRender extends BaseMagickFilter
+{
     public function canHandle(ThingInterface $thing)
     {
         return $thing->getMime() === 'application/pdf';
     }
 
     /**
-     * @param ThingInterface $thing
-     * @param string $sourcePath
+     * @param ThingInterface                        $thing
+     * @param string                                $sourcePath
      * @param OptionsInterface|DocumentImageOptions $options
+     *
      * @throws \Asoc\Dadatata\Exception\ProcessingFailedException
      * @return array
      */
-    public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null) {
+    public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null)
+    {
         $tmpPath = tempnam(sys_get_temp_dir(), 'Dadatata');
 
         $options = $this->defaults->merge($options);
@@ -37,15 +39,14 @@ class PdfRender extends BaseMagickFilter {
         $pb->add('-background')->add('white');
         $pb->add('-alpha')->add('remove');
 
-        $width = $options->getWidth();
+        $width  = $options->getWidth();
         $height = $options->getHeight();
         $pb->add('-resize')->add(sprintf('%dx%d', $width, $height));
 
         $pages = $options->getPages();
-        if($pages === 'all') {
+        if ($pages === 'all') {
             $pb->add(sprintf('%s', $sourcePath));
-        }
-        else {
+        } else {
             $pages = intval($pages);
             $pb->add(sprintf('%s[%s]', $sourcePath, $pages));
         }
@@ -53,19 +54,23 @@ class PdfRender extends BaseMagickFilter {
         $pb->add(sprintf('%s:%s', $options->getFormat(), $tmpPath));
 
         $process = $pb->getProcess();
-        $code = $process->run();
+        $code    = $process->run();
 
-        if($code !== 0) {
-            throw ProcessingFailedException::create('Failed to render PDF as image', $code, $process->getOutput(), $process->getErrorOutput());
+        if ($code !== 0) {
+            throw ProcessingFailedException::create(
+                'Failed to render PDF as image',
+                $code,
+                $process->getOutput(),
+                $process->getErrorOutput()
+            );
         }
 
         $tmpPaths = [];
-        if($pages === 'all') {
-            for($i = 0, $n = $pages; $i < $n; $i++) {
+        if ($pages === 'all') {
+            for ($i = 0, $n = $pages; $i < $n; $i++) {
                 $tmpPaths[] = sprintf('%s-%d', $tmpPath, $i);
             }
-        }
-        else {
+        } else {
             $tmpPaths[] = $tmpPath;
         }
 

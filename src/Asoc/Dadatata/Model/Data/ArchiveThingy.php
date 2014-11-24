@@ -2,8 +2,8 @@
 
 namespace Asoc\Dadatata\Model\Data;
 
-trait ArchiveThingy {
-
+trait ArchiveThingy
+{
     protected $fileNum;
 
     protected $format;
@@ -39,5 +39,4 @@ trait ArchiveThingy {
     {
         return $this->fileNum;
     }
-
 }

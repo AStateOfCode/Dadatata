@@ -2,9 +2,8 @@
 
 namespace Asoc\Dadatata\Metadata;
 
-
-interface TypeGuesserInterface {
-
+interface TypeGuesserInterface
+{
     const CATEGORY_IMAGE = 'image';
     const CATEGORY_AUDIO = 'audio';
     const CATEGORY_VIDEO = 'video';
@@ -15,5 +14,4 @@ interface TypeGuesserInterface {
     public function categorize($path, $mime = null);
 
     public function getMimeType($path);
-
-} 
+}

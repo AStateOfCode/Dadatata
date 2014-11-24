@@ -7,8 +7,8 @@ use Asoc\Dadatata\ToolInterface;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\ProcessBuilder;
 
-class PdfBox implements ToolInterface {
-
+class PdfBox implements ToolInterface
+{
     /**
      * @var
      */
@@ -18,18 +18,20 @@ class PdfBox implements ToolInterface {
      */
     private $version;
 
-    public function __construct($bin) {
+    public function __construct($bin)
+    {
         $this->bin = $bin;
     }
 
     /**
      * @param array $directories Additional directories to search for the executable
+     *
      * @return mixed
      */
     public static function create($directories = [])
     {
         $finder = new ExecutableFinder();
-        $bin = $finder->find('pdfbox', null, $directories);
+        $bin    = $finder->find('pdfbox', null, $directories);
 
         if (null === $bin) {
             return null;
@@ -46,6 +48,7 @@ class PdfBox implements ToolInterface {
     public function getProcessBuilder()
     {
         $pb = new Builder([$this->bin]);
+
         return $pb;
     }
 
@@ -55,7 +58,7 @@ class PdfBox implements ToolInterface {
     public function getVersion()
     {
         if (null === $this->version) {
-            $pb = new Builder([$this->bin]);
+            $pb      = new Builder([$this->bin]);
             $process = $pb->getProcess();
             $process->run();
             if (preg_match('/PDFDBox\sversion:\s"([\d\.]+)"/', $process->getErrorOutput(), $version)) {

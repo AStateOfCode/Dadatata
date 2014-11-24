@@ -4,11 +4,12 @@ namespace Asoc\Tests\Dadatata\Metadata\Reader\Mediainfo;
 use Asoc\Dadatata\Metadata\Reader\Mediainfo\Image;
 use Asoc\Tests\Dadatata\BaseMediaInfoTestCase;
 
-class ImageTest extends BaseMediaInfoTestCase {
-
-    public function testExtract() {
-        $thing = $this->createImageThingMock();
-        $path = $this->createLocator()->getFilePath($thing);
+class ImageTest extends BaseMediaInfoTestCase
+{
+    public function testExtract()
+    {
+        $thing  = $this->createImageThingMock();
+        $path   = $this->createLocator()->getFilePath($thing);
         $reader = $this->setupReader();
 
         $result = $reader->extract($path);
@@ -20,9 +21,9 @@ class ImageTest extends BaseMediaInfoTestCase {
         $this->assertEquals($result['bitdepth'], 32);
     }
 
-    private function setupReader() {
+    private function setupReader()
+    {
         return new Image($this->mediainfoPath);
     }
-
 }
  

@@ -5,14 +5,14 @@ namespace Asoc\Dadatata\Metadata\Reader\Exiftool;
 use Asoc\Dadatata\Metadata\ReaderInterface;
 use PHPExiftool\Driver\Value\ValueInterface;
 
-class VideoMp4 extends BaseReader {
-
+class VideoMp4 extends BaseReader
+{
     private static $map = [
         'Track1' => [
-            'TrackDuration' => ReaderInterface::VIDEO_DURATION,
-            'ImageWidth' => ReaderInterface::VIDEO_WIDTH,
-            'ImageHeight' => ReaderInterface::VIDEO_HEIGHT,
-            'BitDepth' => ReaderInterface::VIDEO_BIT_DEPTH,
+            'TrackDuration'  => ReaderInterface::VIDEO_DURATION,
+            'ImageWidth'     => ReaderInterface::VIDEO_WIDTH,
+            'ImageHeight'    => ReaderInterface::VIDEO_HEIGHT,
+            'BitDepth'       => ReaderInterface::VIDEO_BIT_DEPTH,
             'AverageBitrate' => ReaderInterface::VIDEO_BITRATE,
             'VideoFrameRate' => ReaderInterface::VIDEO_FRAMERATE
         ]
@@ -30,7 +30,7 @@ class VideoMp4 extends BaseReader {
 
     protected function getValue($group, $tag, ValueInterface $value)
     {
-        switch($tag) {
+        switch ($tag) {
             case 'TrackDuration':
                 return $this->parseDuration($value->asString());
             case 'ImageWidth':

@@ -13,12 +13,12 @@ use Asoc\Dadatata\Tool\Unoconv;
 use Asoc\Dadatata\ToolInterface;
 use Neutron\TemporaryFilesystem\TemporaryFilesystemInterface;
 
-class Convert implements FilterInterface {
-
-	/**
-	 * @var \Asoc\Dadatata\ToolInterface|Unoconv
-	 */
-	private $unoconv;
+class Convert implements FilterInterface
+{
+    /**
+     * @var \Asoc\Dadatata\ToolInterface|Unoconv
+     */
+    private $unoconv;
     /**
      * @var \Neutron\TemporaryFilesystem\TemporaryFilesystemInterface
      */
@@ -28,9 +28,10 @@ class Convert implements FilterInterface {
      */
     private $defaults;
 
-    public function __construct(ToolInterface $unoconv, TemporaryFilesystemInterface $tmpFs) {
-		$this->unoconv = $unoconv;
-        $this->tmpFs = $tmpFs;
+    public function __construct(ToolInterface $unoconv, TemporaryFilesystemInterface $tmpFs)
+    {
+        $this->unoconv = $unoconv;
+        $this->tmpFs   = $tmpFs;
     }
 
     /**
@@ -38,36 +39,42 @@ class Convert implements FilterInterface {
      */
     public function setOptions(OptionsInterface $options)
     {
-        if(!($options instanceof DocumentOptions)) {
+        if (!($options instanceof DocumentOptions)) {
             $options = new DocumentOptions($options->all());
         }
         $this->defaults = $options;
     }
 
     /**
-     * @param ThingInterface $thing
-     * @param string $sourcePath
+     * @param ThingInterface                                              $thing
+     * @param string                                                      $sourcePath
      * @param \Asoc\Dadatata\Filter\OptionsInterface|null|DocumentOptions $options
+     *
      * @throws \Asoc\Dadatata\Exception\ProcessingFailedException
      * @return array Paths to generated files
      */
     public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null)
     {
-        $tmpDir = $this->tmpFs->createTemporaryDirectory();
+        $tmpDir  = $this->tmpFs->createTemporaryDirectory();
         $tmpFile = $tmpDir.DIRECTORY_SEPARATOR.$thing->getKey();
 
         /** @var DocumentOptions $options */
         $options = $this->defaults->merge($options);
 
-        $pb = $this->unoconv->getProcessBuilder()
+        $pb      = $this->unoconv->getProcessBuilder()
             ->format($options->getFormat())
             ->output($tmpFile)
             ->input($sourcePath);
         $process = $pb->getProcess();
 
         $code = $process->run();
-        if($code !== 0) {
-            throw ProcessingFailedException::create('Failed to convert document to PDF', $code, $process->getOutput(), $process->getErrorOutput());
+        if ($code !== 0) {
+            throw ProcessingFailedException::create(
+                'Failed to convert document to PDF',
+                $code,
+                $process->getOutput(),
+                $process->getErrorOutput()
+            );
         }
 
         return [$tmpFile];
@@ -75,11 +82,11 @@ class Convert implements FilterInterface {
 
     /**
      * @param ThingInterface $thing
+     *
      * @return boolean
      */
     public function canHandle(ThingInterface $thing)
     {
         return $thing instanceof DocumentInterface || $thing instanceof ImageInterface;
     }
-
 }

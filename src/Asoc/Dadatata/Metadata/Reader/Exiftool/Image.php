@@ -10,15 +10,15 @@ use PHPExiftool\Reader;
 use Asoc\Dadatata\Metadata\ReaderInterface;
 use Monolog\Logger;
 
-class Image implements ReaderInterface {
-
+class Image implements ReaderInterface
+{
     private static $map = [
-        'PNG' => [
-            'ImageWidth' => ReaderInterface::IMAGE_WIDTH,
+        'PNG'  => [
+            'ImageWidth'  => ReaderInterface::IMAGE_WIDTH,
             'ImageHeight' => ReaderInterface::IMAGE_HEIGHT
         ],
         'File' => [
-            'ImageWidth' => ReaderInterface::IMAGE_WIDTH,
+            'ImageWidth'  => ReaderInterface::IMAGE_WIDTH,
             'ImageHeight' => ReaderInterface::IMAGE_HEIGHT
         ],
         'EXIF' => [
@@ -34,54 +34,52 @@ class Image implements ReaderInterface {
 
     public function extract($path)
     {
-        $reader = \PHPExiftool\Reader::create(new Logger('ignore'));
+        $reader   = \PHPExiftool\Reader::create(new Logger('ignore'));
         $metadata = $reader->files([$path])->first();
-        $result = [];
+        $result   = [];
         $faceTags = [];
 
         /** @var \PHPExiftool\Driver\Metadata\MetaData $meta */
-        foreach ($metadata as $meta)
-        {
+        foreach ($metadata as $meta) {
             /** @var \PHPExiftool\Driver\TagInterface $tag */
-            $tag = $meta->getTag();
-            $groupName = $tag->getGroupName();
-            $tagName = $tag->getName();
+            $tag                  = $meta->getTag();
+            $groupName            = $tag->getGroupName();
+            $tagName              = $tag->getName();
             $faceTags[$groupName] = true;
 
             // microsoft photo tag
-            if($groupName === 'XMP-MP') {
-                if($tagName === 'RegionRectangle') {
+            if ($groupName === 'XMP-MP') {
+                if ($tagName === 'RegionRectangle') {
                     $faceTags['coordinates'] = $meta->getValue()->asString();
-                }
-                elseif($tagName === 'RegionPersonDisplayName') {
+                } elseif ($tagName === 'RegionPersonDisplayName') {
                     $faceTags['names'] = $meta->getValue()->asString();
                 }
 
                 continue;
             }
 
-            if(!isset(static::$map[$groupName])) {
+            if (!isset(static::$map[$groupName])) {
                 continue;
             }
             $group = static::$map[$groupName];
-            if(!isset($group[$tagName])) {
+            if (!isset($group[$tagName])) {
                 continue;
             }
 
             $result[$group[$tagName]] = $meta->getValue()->asString();
         }
-        
-        if(isset($faceTags['coordinates']) && isset($faceTags['names'])) {
+
+        if (isset($faceTags['coordinates']) && isset($faceTags['names'])) {
             $result[ReaderInterface::IMAGE_PEOPLE] = [];
-            
+
             $coordinates = explode(';', $faceTags['coordinates']);
-            $names = explode(';', $faceTags['names']);
-            
-            foreach($names as $name) {
-                $name = trim($name);
+            $names       = explode(';', $faceTags['names']);
+
+            foreach ($names as $name) {
+                $name              = trim($name);
                 $personCoordinates = explode(',', array_pop($coordinates));
 
-                if(count($personCoordinates) !== 4) {
+                if (count($personCoordinates) !== 4) {
                     continue;
                 }
 
@@ -91,5 +89,4 @@ class Image implements ReaderInterface {
 
         return $result;
     }
-
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Asoc\Dadatata\Filter\PDFBox;
 
 use Asoc\Dadatata\Exception\ProcessingFailedException;
@@ -12,8 +11,8 @@ use Asoc\Dadatata\Tool\PdfBox;
 use Asoc\Dadatata\ToolInterface;
 use Neutron\TemporaryFilesystem\TemporaryFilesystemInterface;
 
-class PdfToImage implements FilterInterface {
-
+class PdfToImage implements FilterInterface
+{
     /**
      * @var \Asoc\Dadatata\ToolInterface|PdfBox
      */
@@ -27,15 +26,17 @@ class PdfToImage implements FilterInterface {
      */
     private $defaults;
 
-    public function __construct(ToolInterface $pdfBox, TemporaryFilesystemInterface $tmpFs) {
+    public function __construct(ToolInterface $pdfBox, TemporaryFilesystemInterface $tmpFs)
+    {
         $this->pdfBox = $pdfBox;
-        $this->tmpFs = $tmpFs;
+        $this->tmpFs  = $tmpFs;
     }
 
     /**
-     * @param ThingInterface $thing
-     * @param string $sourcePath
+     * @param ThingInterface   $thing
+     * @param string           $sourcePath
      * @param OptionsInterface $options
+     *
      * @throws \Asoc\Dadatata\Exception\ProcessingFailedException
      * @return array Paths to generated files
      */
@@ -52,33 +53,32 @@ class PdfToImage implements FilterInterface {
             ->output($tmpDir)
             ->source($sourcePath);
 
-        if($options->has($options::OPTION_PAGES)) {
+        if ($options->has($options::OPTION_PAGES)) {
             $pages = $options->getPages();
 
-            if(strpos($pages, '-') !== false) {
+            if (strpos($pages, '-') !== false) {
                 list($startPage, $endPage) = explode('-', $pages);
-            }
-            else {
+            } else {
                 $startPage = $pages;
             }
 
             $startPage = intval($startPage);
-            if(isset($endPage)) {
+            if (isset($endPage)) {
                 $endPage = intval($endPage);
             }
 
-            if($startPage === 0) {
+            if ($startPage === 0) {
                 // one based
                 $startPage = 1;
 
-                if(isset($endPage)) {
+                if (isset($endPage)) {
                     $endPage++;
                 }
             }
 
             $pb->startPage($startPage);
 
-            if(isset($endPage)) {
+            if (isset($endPage)) {
                 $pb->endPage($endPage);
             }
         }
@@ -86,8 +86,13 @@ class PdfToImage implements FilterInterface {
         $process = $pb->getProcess();
 
         $code = $process->run();
-        if($code !== 0) {
-            throw ProcessingFailedException::create('Failed to convert PDF to image', $code, $process->getOutput(), $process->getErrorOutput());
+        if ($code !== 0) {
+            throw ProcessingFailedException::create(
+                'Failed to convert PDF to image',
+                $code,
+                $process->getOutput(),
+                $process->getErrorOutput()
+            );
         }
 
         $outputFiles = glob($tmpDir.'*.jpg');
@@ -97,6 +102,7 @@ class PdfToImage implements FilterInterface {
 
     /**
      * @param ThingInterface $thing
+     *
      * @return boolean
      */
     public function canHandle(ThingInterface $thing)
@@ -109,7 +115,7 @@ class PdfToImage implements FilterInterface {
      */
     public function setOptions(OptionsInterface $options)
     {
-        if(!($options instanceof DocumentImageOptions)) {
+        if (!($options instanceof DocumentImageOptions)) {
             $options = new DocumentImageOptions($options->all());
         }
         $this->defaults = $options;

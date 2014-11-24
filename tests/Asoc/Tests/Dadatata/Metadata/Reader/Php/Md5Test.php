@@ -6,9 +6,10 @@ use Asoc\Dadatata\Metadata\Reader\Php\Md5;
 use Asoc\Dadatata\Metadata\ReaderInterface;
 use Asoc\Tests\Dadatata\BaseTestCase;
 
-class Md5Test extends BaseTestCase {
-
-    public function testExtract() {
+class Md5Test extends BaseTestCase
+{
+    public function testExtract()
+    {
         $this->markSkippedIfNotAvailable();
         $tempfile = $this->createTempFile();
 
@@ -19,14 +20,15 @@ class Md5Test extends BaseTestCase {
         $this->assertEquals(md5_file($tempfile), $result[ReaderInterface::HASH_MD5]);
     }
 
-    protected function markSkippedIfNotAvailable() {
-        if(!in_array('md5', hash_algos())) {
+    protected function markSkippedIfNotAvailable()
+    {
+        if (!in_array('md5', hash_algos())) {
             $this->markTestSkipped('MD5 hash algorithm not available');
         }
     }
 
-    protected function createReader() {
+    protected function createReader()
+    {
         return new Md5();
     }
-
-} 
+}

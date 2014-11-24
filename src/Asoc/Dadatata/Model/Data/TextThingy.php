@@ -2,6 +2,7 @@
 
 namespace Asoc\Dadatata\Model\Data;
 
-trait TextThingy {
+trait TextThingy
+{
 
 }

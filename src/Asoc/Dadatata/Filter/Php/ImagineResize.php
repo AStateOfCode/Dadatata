@@ -10,8 +10,8 @@ use Asoc\Dadatata\Model\ThingInterface;
 use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
 
-class ImagineResize extends BaseImageFilter {
-
+class ImagineResize extends BaseImageFilter
+{
     /**
      * @var string
      */
@@ -22,14 +22,16 @@ class ImagineResize extends BaseImageFilter {
      */
     private $imagine;
 
-    public function __construct(ImagineInterface $imagine) {
+    public function __construct(ImagineInterface $imagine)
+    {
         $this->imagine = $imagine;
     }
 
     /**
-     * @param ThingInterface $thing
-     * @param $sourcePath
+     * @param ThingInterface   $thing
+     * @param                  $sourcePath
      * @param OptionsInterface $options
+     *
      * @return array Paths to generated files
      */
     public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null)
@@ -38,7 +40,7 @@ class ImagineResize extends BaseImageFilter {
 
         $options = $this->defaults->merge($options);
 
-        $width = $options->getWidth();
+        $width  = $options->getWidth();
         $height = $options->getHeight();
 
         $size = new Box($width, $height);
@@ -46,29 +48,37 @@ class ImagineResize extends BaseImageFilter {
         $transformation = $this->getTransformation($image, $size, $options);
 
         $tmpPath = tempnam(sys_get_temp_dir(), 'Dadatata');
-        $transformation->save($tmpPath, [
-            'format' => $options->getFormat(),
-            'quality' => $options->getQuality()
-        ]);
+        $transformation->save(
+            $tmpPath,
+            [
+                'format'  => $options->getFormat(),
+                'quality' => $options->getQuality()
+            ]
+        );
 
         try {
             $transformation->apply($image);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new ProcessingFailedException('Failed to create image: '.$e->getMessage());
         }
 
         return [$tmpPath];
     }
 
-    protected function getTransformation(\Imagine\Image\ImageInterface $image, Box $size, OptionsInterface $options = null) {
-        $transformation =  new \Imagine\Filter\Transformation();
+    protected function getTransformation(
+        \Imagine\Image\ImageInterface $image,
+        Box $size,
+        OptionsInterface $options = null
+    ) {
+        $transformation = new \Imagine\Filter\Transformation();
         $transformation->resize($size, \Imagine\Image\ImageInterface::FILTER_LANCZOS);
+
         return $transformation;
     }
 
     /**
      * @param ThingInterface $thing
+     *
      * @return boolean
      */
     public function canHandle(ThingInterface $thing)

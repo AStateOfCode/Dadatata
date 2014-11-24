@@ -2,8 +2,8 @@
 
 namespace Asoc\Tests\Dadatata;
 
-abstract class BaseMediaInfoTestCase extends BaseTestCase {
-
+abstract class BaseMediaInfoTestCase extends BaseTestCase
+{
     protected $mediainfoPath;
 
     protected function setUp()
@@ -12,5 +12,4 @@ abstract class BaseMediaInfoTestCase extends BaseTestCase {
 
         parent::setUp();
     }
-
-} 
+}

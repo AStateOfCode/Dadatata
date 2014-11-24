@@ -6,8 +6,8 @@ use Asoc\Dadatata\ToolInterface;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\ProcessBuilder;
 
-class Tesseract implements ToolInterface {
-
+class Tesseract implements ToolInterface
+{
     /**
      * @var
      */
@@ -17,18 +17,20 @@ class Tesseract implements ToolInterface {
      */
     private $version;
 
-    public function __construct($bin) {
+    public function __construct($bin)
+    {
         $this->bin = $bin;
     }
 
     /**
      * @param array $directories Additional directories to search for the executable
+     *
      * @return mixed
      */
     public static function create($directories = [])
     {
         $finder = new ExecutableFinder();
-        $bin = $finder->find('tesseract', null, $directories);
+        $bin    = $finder->find('tesseract', null, $directories);
 
         if (null === $bin) {
             return null;
@@ -45,6 +47,7 @@ class Tesseract implements ToolInterface {
     public function getProcessBuilder()
     {
         $pb = new TesseractBuilder([$this->bin]);
+
         return $pb;
     }
 
@@ -54,7 +57,7 @@ class Tesseract implements ToolInterface {
     public function getVersion()
     {
         if (null === $this->version) {
-            $pb = new TesseractBuilder([$this->bin]);
+            $pb      = new TesseractBuilder([$this->bin]);
             $process = $pb->version()->getProcess();
             $process->run();
             if (preg_match('/tesseract\s([\d\.]+)/', $process->getErrorOutput(), $version)) {

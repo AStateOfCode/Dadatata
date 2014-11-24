@@ -2,9 +2,9 @@
 
 namespace Asoc\Dadatata\Model;
 
-interface DocumentInterface {
-
+interface DocumentInterface
+{
     public function setPages($num);
-    public function getPages();
 
+    public function getPages();
 }

@@ -2,8 +2,8 @@
 
 namespace Asoc\Dadatata\Model\Data;
 
-trait VideoThingy {
-
+trait VideoThingy
+{
     /**
      * @var int
      */
@@ -144,5 +144,4 @@ trait VideoThingy {
     {
         return $this->width;
     }
-
 }

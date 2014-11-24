@@ -6,9 +6,10 @@ use Asoc\Dadatata\Filesystem\Store;
 use Asoc\Dadatata\Model\FilePathFragments;
 use Asoc\Tests\Dadatata\BaseTestCase;
 
-class StoreTest extends BaseTestCase {
-
-    public function testSaveWithFilePath() {
+class StoreTest extends BaseTestCase
+{
+    public function testSaveWithFilePath()
+    {
         $store = $this->createStore();
         $thing = $this->createThing();
 
@@ -22,9 +23,10 @@ class StoreTest extends BaseTestCase {
         $this->assertFileEquals($data, $path);
     }
 
-    public function testSaveWithSplFileInfo() {
-        $store = $this->createStore();
-        $thing = $this->createThing();
+    public function testSaveWithSplFileInfo()
+    {
+        $store      = $this->createStore();
+        $thing      = $this->createThing();
         $sourcePath = $this->createLocator()->getFilePath($this->createImageThingMock());
 
         $store->save($thing, new \SplFileInfo($sourcePath));
@@ -35,7 +37,8 @@ class StoreTest extends BaseTestCase {
         $this->assertFileEquals($sourcePath, $path);
     }
 
-    public function testSaveWithFilePathFragments() {
+    public function testSaveWithFilePathFragments()
+    {
         $store = $this->createStore();
         $thing = $this->createThing();
 
@@ -54,13 +57,15 @@ class StoreTest extends BaseTestCase {
     /**
      * @expectedException \Asoc\Dadatata\Exception\FileNotFoundException
      */
-    public function testSaveWithNonExistentFile() {
+    public function testSaveWithNonExistentFile()
+    {
         $store = $this->createStore();
         $thing = $this->createThing();
         $store->save($thing, sys_get_temp_dir().'/this_should_not_exist'.uniqid());
     }
 
-    public function testLoad() {
+    public function testLoad()
+    {
         $store = $this->createStore();
         $thing = $this->createThing();
 
@@ -78,13 +83,15 @@ class StoreTest extends BaseTestCase {
     /**
      * @expectedException \Asoc\Dadatata\Exception\FileNotFoundException
      */
-    public function testLoadWithNonExistentFile() {
+    public function testLoadWithNonExistentFile()
+    {
         $store = $this->createStore();
         $thing = $this->createThing();
         $store->load($thing);
     }
 
-    public function testRemove() {
+    public function testRemove()
+    {
         $store = $this->createStore();
         $thing = $this->createThing();
         $thing->expects($this->any())->method('getFragments')->will($this->returnValue(1));
@@ -97,7 +104,8 @@ class StoreTest extends BaseTestCase {
         $this->assertFileNotExists($path);
     }
 
-    public function testRemoveWithMultipleFragments() {
+    public function testRemoveWithMultipleFragments()
+    {
         $store = $this->createStore();
         $thing = $this->createThing();
 
@@ -117,16 +125,19 @@ class StoreTest extends BaseTestCase {
         $this->assertFileNotExists($store->getPath($thing, 3));
     }
 
-    protected function createThing() {
+    protected function createThing()
+    {
         $thing = $this->createEmptyThingMock();
         $thing->expects($this->any())->method('getKey')->will($this->returnValue(md5(uniqid())));
+
         return $thing;
     }
 
-    protected function createStore() {
+    protected function createStore()
+    {
         $locator = $this->createTempLocator();
+
         return new Store($locator);
     }
-
 }
  

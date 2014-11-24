@@ -5,19 +5,19 @@ namespace Asoc\Dadatata\Metadata\Reader\Exiftool;
 use Asoc\Dadatata\Metadata\ReaderInterface;
 use PHPExiftool\Driver\Value\ValueInterface;
 
-class AudioMpeg extends BaseAudioReader {
-
+class AudioMpeg extends BaseAudioReader
+{
     private static $map = [
-        'MPEG' => [
-            'SampleRate' => ReaderInterface::AUDIO_SAMPLE_RATE,
+        'MPEG'      => [
+            'SampleRate'   => ReaderInterface::AUDIO_SAMPLE_RATE,
             'AudioBitrate' => ReaderInterface::AUDIO_BITRATE,
         ],
-        'ID3v2_3' => [
+        'ID3v2_3'   => [
             'Artist' => ReaderInterface::AUDIO_ARTIST,
-            'Title' => ReaderInterface::AUDIO_TITLE,
-            'Album' => ReaderInterface::AUDIO_ALBUM,
-            'Track' => ReaderInterface::AUDIO_TRACK_NUM,
-            'Year' => ReaderInterface::AUDIO_YEAR
+            'Title'  => ReaderInterface::AUDIO_TITLE,
+            'Album'  => ReaderInterface::AUDIO_ALBUM,
+            'Track'  => ReaderInterface::AUDIO_TRACK_NUM,
+            'Year'   => ReaderInterface::AUDIO_YEAR
         ],
         'Composite' => [
             'Duration' => ReaderInterface::AUDIO_LENGTH
@@ -31,7 +31,7 @@ class AudioMpeg extends BaseAudioReader {
 
     protected function getValue($group, $tag, ValueInterface $value)
     {
-        switch($tag) {
+        switch ($tag) {
             case 'SampleRate':
                 return intval($value->asString());
             case 'AudioBitrate':

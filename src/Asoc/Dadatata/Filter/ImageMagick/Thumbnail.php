@@ -9,12 +9,13 @@ use Asoc\Dadatata\Filter\OptionsInterface;
 use Asoc\Dadatata\Model\ImageInterface;
 use Asoc\Dadatata\Model\ThingInterface;
 
-class Thumbnail extends BaseMagickFilter {
-
+class Thumbnail extends BaseMagickFilter
+{
     /**
      * @param ThingInterface|ImageInterface $thing
-     * @param string $sourcePath
+     * @param string                        $sourcePath
      * @param OptionsInterface|ImageOptions $options
+     *
      * @throws \Asoc\Dadatata\Exception\ProcessingFailedException
      * @return array Paths to generated files
      */
@@ -27,21 +28,20 @@ class Thumbnail extends BaseMagickFilter {
         $pb = $this->getConvertProcess();
         $pb->add('-quality')->add($options->getQuality());
 
-        $width = $options->getWidth();
+        $width  = $options->getWidth();
         $height = $options->getHeight();
 
-        if($thing->getWidth() > $width && $thing->getHeight() > $height) {
-            if($width === $height) {
+        if ($thing->getWidth() > $width && $thing->getHeight() > $height) {
+            if ($width === $height) {
                 // square image
                 // http://www.imagemagick.org/Usage/thumbnails/#cut
-                $single = sprintf('%dx%d', $width, $height);
-                $doubled = sprintf('%dx%d', $width*2, $height*2);
+                $single  = sprintf('%dx%d', $width, $height);
+                $doubled = sprintf('%dx%d', $width * 2, $height * 2);
                 //$pb->add('-define')->add(sprintf('jpeg:size=%s', $doubled));
                 $pb->add('-thumbnail')->add(sprintf('%s^', $single));
                 $pb->add('-gravity')->add('center');
                 $pb->add('-extent')->add($single);
-            }
-            else {
+            } else {
                 $pb->add('-thumbnail')->add(sprintf('%dx%d', $width, $height));
             }
         }
@@ -50,10 +50,15 @@ class Thumbnail extends BaseMagickFilter {
         $pb->add(sprintf('%s:%s', $options->getFormat(), $tmpPath));
 
         $process = $pb->getProcess();
-        $code = $process->run();
+        $code    = $process->run();
 
-        if($code !== 0) {
-            throw ProcessingFailedException::create('Failed to create thumbnail', $code, $process->getOutput(), $process->getErrorOutput());
+        if ($code !== 0) {
+            throw ProcessingFailedException::create(
+                'Failed to create thumbnail',
+                $code,
+                $process->getOutput(),
+                $process->getErrorOutput()
+            );
         }
 
         return [$tmpPath];

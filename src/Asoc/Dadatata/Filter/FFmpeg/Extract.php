@@ -7,20 +7,22 @@ use Asoc\Dadatata\Model\ThingInterface;
 use Asoc\Dadatata\Model\VideoInterface;
 use Symfony\Component\Process\ProcessBuilder;
 
-class Extract implements FilterInterface {
-
+class Extract implements FilterInterface
+{
     /**
      * @var string
      */
     private $bin;
 
-    public function __construct($bin = '/usr/bin/ffmpeg') {
+    public function __construct($bin = '/usr/bin/ffmpeg')
+    {
         $this->bin = $bin;
     }
 
     /**
      * @param ThingInterface $thing
-     * @param $sourcePath
+     * @param                $sourcePath
+     *
      * @return array Paths to generated files
      */
     public function process(ThingInterface $thing, $sourcePath, array $options = null)
@@ -36,7 +38,7 @@ class Extract implements FilterInterface {
         $pb->add($tmpPath);
 
         $process = $pb->getProcess();
-        $code = $process->run();
+        $code    = $process->run();
 
         $x = $process->getOutput();
         $y = $process->getErrorOutput();
@@ -46,6 +48,7 @@ class Extract implements FilterInterface {
 
     /**
      * @param ThingInterface $thing
+     *
      * @return boolean
      */
     public function canHandle(ThingInterface $thing)

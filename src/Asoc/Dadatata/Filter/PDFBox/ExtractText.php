@@ -10,8 +10,8 @@ use Asoc\Dadatata\Tool\PdfBox;
 use Asoc\Dadatata\ToolInterface;
 use Neutron\TemporaryFilesystem\TemporaryFilesystemInterface;
 
-class ExtractText implements FilterInterface {
-
+class ExtractText implements FilterInterface
+{
     /**
      * @var \Asoc\Dadatata\ToolInterface|PdfBox
      */
@@ -21,32 +21,39 @@ class ExtractText implements FilterInterface {
      */
     private $tmpFs;
 
-    public function __construct(ToolInterface $pdfBox, TemporaryFilesystemInterface $tmpFs) {
+    public function __construct(ToolInterface $pdfBox, TemporaryFilesystemInterface $tmpFs)
+    {
         $this->pdfBox = $pdfBox;
-        $this->tmpFs = $tmpFs;
+        $this->tmpFs  = $tmpFs;
     }
 
     /**
-     * @param ThingInterface $thing
-     * @param string $sourcePath
+     * @param ThingInterface   $thing
+     * @param string           $sourcePath
      * @param OptionsInterface $options
+     *
      * @throws \Asoc\Dadatata\Exception\ProcessingFailedException
      * @return array Paths to generated files
      */
     public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null)
     {
-        $tmpDir = $this->tmpFs->createTemporaryDirectory();
+        $tmpDir  = $this->tmpFs->createTemporaryDirectory();
         $tmpFile = $tmpDir.DIRECTORY_SEPARATOR.$thing->getKey();
 
-        $pb = $this->pdfBox->getProcessBuilder()
+        $pb      = $this->pdfBox->getProcessBuilder()
             ->extractText()
             ->source($sourcePath)
             ->output($tmpFile);
         $process = $pb->getProcess();
 
         $code = $process->run();
-        if($code !== 0) {
-            throw ProcessingFailedException::create('Failed to convert PDF to text', $code, $process->getOutput(), $process->getErrorOutput());
+        if ($code !== 0) {
+            throw ProcessingFailedException::create(
+                'Failed to convert PDF to text',
+                $code,
+                $process->getOutput(),
+                $process->getErrorOutput()
+            );
         }
 
         return [$tmpFile];
@@ -54,6 +61,7 @@ class ExtractText implements FilterInterface {
 
     /**
      * @param ThingInterface $thing
+     *
      * @return boolean
      */
     public function canHandle(ThingInterface $thing)
@@ -66,6 +74,5 @@ class ExtractText implements FilterInterface {
      */
     public function setOptions(OptionsInterface $options)
     {
-
     }
 }

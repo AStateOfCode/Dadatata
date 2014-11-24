@@ -2,8 +2,8 @@
 
 namespace Asoc\Dadatata\Metadata;
 
-interface ReaderInterface {
-
+interface ReaderInterface
+{
     const HASH_SHA1 = 'sha1';
     const HASH_MD5 = 'md5';
     const HASH_SHA512 = 'sha512';
@@ -63,5 +63,4 @@ interface ReaderInterface {
     public function canHandle($mime);
 
     public function extract($path);
-
 }

@@ -7,8 +7,8 @@ use Asoc\Dadatata\Metadata\WriterInterface;
 use Asoc\Dadatata\Model\ImageInterface;
 use Asoc\Dadatata\Model\ThingInterface;
 
-class ImageWriter implements WriterInterface {
-
+class ImageWriter implements WriterInterface
+{
     public function canHandle($object)
     {
         return $object instanceof ImageInterface;
@@ -16,21 +16,20 @@ class ImageWriter implements WriterInterface {
 
     /**
      * @param ThingInterface|ImageInterface $object
-     * @param array $knowledge
+     * @param array                         $knowledge
      */
     public function apply($object, array $knowledge)
     {
-        if(isset($knowledge[ReaderInterface::IMAGE_WIDTH])) {
+        if (isset($knowledge[ReaderInterface::IMAGE_WIDTH])) {
             $width = intval($knowledge[ReaderInterface::IMAGE_WIDTH]);
             $object->setWidth($width);
         }
-        if(isset($knowledge[ReaderInterface::IMAGE_HEIGHT])) {
+        if (isset($knowledge[ReaderInterface::IMAGE_HEIGHT])) {
             $height = intval($knowledge[ReaderInterface::IMAGE_HEIGHT]);
             $object->setHeight($height);
         }
-        if(isset($knowledge[ReaderInterface::IMAGE_FORMAT])) {
+        if (isset($knowledge[ReaderInterface::IMAGE_FORMAT])) {
             $object->setFormat($knowledge[ReaderInterface::IMAGE_FORMAT]);
         }
     }
-
 }

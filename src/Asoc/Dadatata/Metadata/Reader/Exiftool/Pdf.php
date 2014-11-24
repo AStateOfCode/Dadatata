@@ -10,8 +10,8 @@ use PHPExiftool\Reader;
 use Asoc\Dadatata\Metadata\ReaderInterface;
 use Monolog\Logger;
 
-class Pdf implements ReaderInterface {
-
+class Pdf implements ReaderInterface
+{
     private static $map = [
         'PDF' => [
             'PageCount' => ReaderInterface::DOCUMENT_PAGE_COUNT
@@ -28,24 +28,23 @@ class Pdf implements ReaderInterface {
 
     public function extract($path)
     {
-        $reader = \PHPExiftool\Reader::create(new Logger('ignore'));
+        $reader   = \PHPExiftool\Reader::create(new Logger('ignore'));
         $metadata = $reader->files([$path])->first();
-        $result = [];
+        $result   = [];
 
         /** @var \PHPExiftool\Driver\Metadata\MetaData $meta */
-        foreach ($metadata as $meta)
-        {
+        foreach ($metadata as $meta) {
             /** @var \PHPExiftool\Driver\TagInterface $tag */
-            $tag = $meta->getTag();
-            $groupName = $tag->getGroupName();
-            $tagName = $tag->getName();
+            $tag                  = $meta->getTag();
+            $groupName            = $tag->getGroupName();
+            $tagName              = $tag->getName();
             $faceTags[$groupName] = true;
 
-            if(!isset(static::$map[$groupName])) {
+            if (!isset(static::$map[$groupName])) {
                 continue;
             }
             $group = static::$map[$groupName];
-            if(!isset($group[$tagName])) {
+            if (!isset($group[$tagName])) {
                 continue;
             }
 
@@ -54,5 +53,4 @@ class Pdf implements ReaderInterface {
 
         return $result;
     }
-
 }

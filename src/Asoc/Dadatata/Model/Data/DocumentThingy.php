@@ -2,8 +2,8 @@
 
 namespace Asoc\Dadatata\Model\Data;
 
-trait DocumentThingy {
-
+trait DocumentThingy
+{
     protected $pages;
 
     /**
@@ -21,5 +21,4 @@ trait DocumentThingy {
     {
         return $this->pages;
     }
-
 }

@@ -13,13 +13,14 @@ class SimpleVariator extends BaseVariator
      */
     protected $filters;
 
-    public function __construct(array $filters) {
+    public function __construct(array $filters)
+    {
         $this->filters = $filters;
     }
 
     protected function getFilterForVariant($variant, OptionsInterface $options = null)
     {
-        if(!isset($this->filters[$variant])) {
+        if (!isset($this->filters[$variant])) {
             throw new NoFilterDefinedForVariantException();
         }
 
@@ -36,6 +37,7 @@ class SimpleVariator extends BaseVariator
 
     /**
      * @param string $variant Variant name
+     *
      * @return bool
      */
     public function hasSupportFor($variant)

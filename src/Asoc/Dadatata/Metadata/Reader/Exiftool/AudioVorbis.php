@@ -5,16 +5,16 @@ namespace Asoc\Dadatata\Metadata\Reader\Exiftool;
 use Asoc\Dadatata\Metadata\ReaderInterface;
 use PHPExiftool\Driver\Value\ValueInterface;
 
-class AudioVorbis extends BaseAudioReader {
-
+class AudioVorbis extends BaseAudioReader
+{
     private static $map = [
-        'Vorbis' => [
-            'AudioChannels' => ReaderInterface::AUDIO_CHANNELS,
-            'SampleRate' => ReaderInterface::AUDIO_SAMPLE_RATE,
+        'Vorbis'    => [
+            'AudioChannels'  => ReaderInterface::AUDIO_CHANNELS,
+            'SampleRate'     => ReaderInterface::AUDIO_SAMPLE_RATE,
             'NominalBitrate' => ReaderInterface::AUDIO_BITRATE,
-            'Artist' => ReaderInterface::AUDIO_ARTIST,
-            'Title' => ReaderInterface::AUDIO_TITLE,
-            'Album' => ReaderInterface::AUDIO_ALBUM
+            'Artist'         => ReaderInterface::AUDIO_ARTIST,
+            'Title'          => ReaderInterface::AUDIO_TITLE,
+            'Album'          => ReaderInterface::AUDIO_ALBUM
         ],
         'Composite' => [
             'Duration' => ReaderInterface::AUDIO_LENGTH
@@ -28,7 +28,7 @@ class AudioVorbis extends BaseAudioReader {
 
     protected function getValue($group, $tag, ValueInterface $value)
     {
-        switch($tag) {
+        switch ($tag) {
             case 'AudioChannels':
             case 'SampleRate':
                 return intval($value->asString());

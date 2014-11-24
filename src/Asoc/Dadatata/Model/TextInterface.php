@@ -2,6 +2,7 @@
 
 namespace Asoc\Dadatata\Model;
 
-interface TextInterface {
+interface TextInterface
+{
 
 }

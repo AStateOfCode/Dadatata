@@ -18,7 +18,7 @@ final class ProcessingFailedException extends Exception
 
     public static function create($message = '', $code, $stdOut = '', $stdErr = '')
     {
-        $exception = new self($message, $code);
+        $exception         = new self($message, $code);
         $exception->stdOut = $stdOut;
         $exception->stdErr = $stdErr;
 
@@ -40,5 +40,4 @@ final class ProcessingFailedException extends Exception
     {
         return $this->stdOut;
     }
-
-} 
+}

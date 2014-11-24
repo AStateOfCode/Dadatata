@@ -2,8 +2,8 @@
 
 namespace Asoc\Dadatata\Model\Data;
 
-trait AudioThingy {
-
+trait AudioThingy
+{
     /**
      * @var int
      */
@@ -204,5 +204,4 @@ trait AudioThingy {
     {
         return $this->title;
     }
-
 }

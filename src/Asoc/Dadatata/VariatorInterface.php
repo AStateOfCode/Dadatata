@@ -9,10 +9,11 @@ use Asoc\Dadatata\Model\ThingInterface;
 interface VariatorInterface
 {
     /**
-     * @param ThingInterface $thing
-     * @param string $variant
-     * @param string $sourcePath
+     * @param ThingInterface   $thing
+     * @param string           $variant
+     * @param string           $sourcePath
      * @param OptionsInterface $options
+     *
      * @return null|FilePathFragments
      */
     public function generate(ThingInterface $thing, $variant, $sourcePath, OptionsInterface $options = null);
@@ -24,6 +25,7 @@ interface VariatorInterface
 
     /**
      * @param string $variant Variant name
+     *
      * @return bool
      */
     public function hasSupportFor($variant);

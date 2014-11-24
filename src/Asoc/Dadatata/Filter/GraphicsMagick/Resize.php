@@ -9,12 +9,13 @@ use Asoc\Dadatata\Filter\OptionsInterface;
 use Asoc\Dadatata\Model\ImageInterface;
 use Asoc\Dadatata\Model\ThingInterface;
 
-class Resize extends BaseMagickFilter {
-
+class Resize extends BaseMagickFilter
+{
     /**
      * @param ThingInterface|ImageInterface $thing
-     * @param string $sourcePath
+     * @param string                        $sourcePath
      * @param OptionsInterface|ImageOptions $options
+     *
      * @throws \Asoc\Dadatata\Exception\ProcessingFailedException
      * @return array Paths to generated files
      */
@@ -27,13 +28,18 @@ class Resize extends BaseMagickFilter {
         $pb = $this->getConvertProcess();
         $pb->add('-quality')->add($options->getQuality());
 
-        $width = $options->getWidth();
+        $width  = $options->getWidth();
         $height = $options->getHeight();
 
-        list($resizeRatio, $width, $height) = $this->getProperSize($width, $height, $thing->getWidth(), $thing->getHeight());
+        list($resizeRatio, $width, $height) = $this->getProperSize(
+            $width,
+            $height,
+            $thing->getWidth(),
+            $thing->getHeight()
+        );
 
         // only perform a resize when width and/or height changed
-        if($thing->getWidth() !== $width || $thing->getHeight() !== $height) {
+        if ($thing->getWidth() !== $width || $thing->getHeight() !== $height) {
             $pb->add('-resize')->add(sprintf('%dx%d', $width, $height));
         }
 
@@ -41,13 +47,17 @@ class Resize extends BaseMagickFilter {
         $pb->add(sprintf('%s:%s', $options->getFormat(), $tmpPath));
 
         $process = $pb->getProcess();
-        $code = $process->run();
+        $code    = $process->run();
 
-        if($code !== 0) {
-            throw ProcessingFailedException::create('Failed to resize image', $code, $process->getOutput(), $process->getErrorOutput());
+        if ($code !== 0) {
+            throw ProcessingFailedException::create(
+                'Failed to resize image',
+                $code,
+                $process->getOutput(),
+                $process->getErrorOutput()
+            );
         }
 
         return [$tmpPath];
     }
-
 }

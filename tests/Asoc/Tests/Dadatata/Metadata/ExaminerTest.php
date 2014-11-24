@@ -7,25 +7,38 @@ use Asoc\Dadatata\Metadata\ReaderInterface;
 use Asoc\Dadatata\Metadata\TypeGuesserInterface;
 use Asoc\Tests\Dadatata\BaseTestCase;
 
-class ExaminerTest extends BaseTestCase {
-
-    public function testExamine() {
+class ExaminerTest extends BaseTestCase
+{
+    public function testExamine()
+    {
         $path = $this->createLocator()->getFilePath($this->createImageThingMock());
 
         $typeGuesser = $this->createTypeGuesser('dontcare', 'image/png');
 
-        $reader1 = $this->createReader(true, [
-            'foo' => 42
-        ]);
-        $reader2 = $this->createReader(false, [
-            'test' => 'ing'
-        ]);
-        $reader3 = $this->createReader(true, [
-            'bar' => 1337
-        ]);
-        $reader4 = $this->createReader(true, [
-            'bar' => 1338
-        ]);
+        $reader1 = $this->createReader(
+            true,
+            [
+                'foo' => 42
+            ]
+        );
+        $reader2 = $this->createReader(
+            false,
+            [
+                'test' => 'ing'
+            ]
+        );
+        $reader3 = $this->createReader(
+            true,
+            [
+                'bar' => 1337
+            ]
+        );
+        $reader4 = $this->createReader(
+            true,
+            [
+                'bar' => 1338
+            ]
+        );
 
         $examiner = new Examiner([$typeGuesser], [$reader1, $reader2, $reader3, $reader4]);
         list($knowledge, $mime) = $examiner->examine($path);
@@ -40,7 +53,8 @@ class ExaminerTest extends BaseTestCase {
         $this->assertEquals(filesize($path), $knowledge[ReaderInterface::SIZE]);
     }
 
-    public function testCategorizeWithNoTypeGuesser() {
+    public function testCategorizeWithNoTypeGuesser()
+    {
         $path = $this->createLocator()->getFilePath($this->createImageThingMock());
 
         $examiner = new Examiner([], []);
@@ -50,11 +64,12 @@ class ExaminerTest extends BaseTestCase {
         $this->assertNull($mime);
     }
 
-    public function testCategorizeWithOneTypeGuesser() {
+    public function testCategorizeWithOneTypeGuesser()
+    {
         $path = $this->createLocator()->getFilePath($this->createImageThingMock());
 
         $expectedCategory = TypeGuesserInterface::CATEGORY_IMAGE;
-        $expectedMime = 'image/png';
+        $expectedMime     = 'image/png';
 
         $typeGuesser = $this->createTypeGuesser($expectedCategory, $expectedMime);
 
@@ -65,11 +80,12 @@ class ExaminerTest extends BaseTestCase {
         $this->assertEquals($expectedMime, $mime);
     }
 
-    public function testCategorizeWithMultipleTypeGuessers() {
+    public function testCategorizeWithMultipleTypeGuessers()
+    {
         $path = $this->createLocator()->getFilePath($this->createImageThingMock());
 
         $expectedCategory = TypeGuesserInterface::CATEGORY_IMAGE;
-        $expectedMime = 'image/png';
+        $expectedMime     = 'image/png';
 
         $typeGuesser1 = $this->createTypeGuesser($expectedCategory, $expectedMime);
         $typeGuesser2 = $this->createTypeGuesser('wrongcategory', 'wrongmime');
@@ -82,18 +98,21 @@ class ExaminerTest extends BaseTestCase {
         $this->assertEquals($expectedMime, $mime);
     }
 
-    protected function createTypeGuesser($category, $mime) {
+    protected function createTypeGuesser($category, $mime)
+    {
         $typeGuesser = $this->getMock('Asoc\Dadatata\Metadata\TypeGuesserInterface');
         $typeGuesser->expects($this->any())->method('categorize')->will($this->returnValue($category));
         $typeGuesser->expects($this->any())->method('getMimeType')->will($this->returnValue($mime));
+
         return $typeGuesser;
     }
 
-    protected function createReader($canHandle = true, $extractValue = null) {
+    protected function createReader($canHandle = true, $extractValue = null)
+    {
         $reader = $this->getMock('Asoc\Dadatata\Metadata\ReaderInterface');
         $reader->expects($this->any())->method('canHandle')->will($this->returnValue($canHandle));
         $reader->expects($this->any())->method('extract')->will($this->returnValue($extractValue));
+
         return $reader;
     }
-
 }

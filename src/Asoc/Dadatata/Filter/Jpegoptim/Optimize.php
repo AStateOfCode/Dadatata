@@ -9,8 +9,8 @@ use Asoc\Dadatata\Model\ImageInterface;
 use Asoc\Dadatata\Model\ThingInterface;
 use Symfony\Component\Process\ProcessBuilder;
 
-class Optimize implements FilterInterface {
-
+class Optimize implements FilterInterface
+{
     /**
      * @var
      */
@@ -20,7 +20,8 @@ class Optimize implements FilterInterface {
      */
     private $defaults;
 
-    public function __construct($bin) {
+    public function __construct($bin)
+    {
         $this->bin = $bin;
     }
 
@@ -29,16 +30,17 @@ class Optimize implements FilterInterface {
      */
     public function setOptions(OptionsInterface $options)
     {
-        if(!($options instanceof OptimizeOptions)) {
+        if (!($options instanceof OptimizeOptions)) {
             $options = new OptimizeOptions($options->all());
         }
         $this->defaults = $options;
     }
 
     /**
-     * @param ThingInterface $thing
-     * @param string $sourcePath
+     * @param ThingInterface                              $thing
+     * @param string                                      $sourcePath
      * @param \Asoc\Dadatata\Filter\OptionsInterface|null $options
+     *
      * @return array Paths to generated files
      */
     public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null)
@@ -54,7 +56,7 @@ class Optimize implements FilterInterface {
         $pb->add('--max')->add($options->getQuality());
         $pb->add('--strip-'.$options->getStrip());
 
-        if($options->has(OptimizeOptions::OPTION_THRESHOLD)) {
+        if ($options->has(OptimizeOptions::OPTION_THRESHOLD)) {
             $pb->add('--threshold')->add($options->getThreshold());
         }
 
@@ -62,8 +64,13 @@ class Optimize implements FilterInterface {
         $process = $pb->getProcess();
 
         $code = $process->run();
-        if($code !== 0) {
-            throw ProcessingFailedException::create('Failed to optimize JPEG', $code, $process->getOutput(), $process->getErrorOutput());
+        if ($code !== 0) {
+            throw ProcessingFailedException::create(
+                'Failed to optimize JPEG',
+                $code,
+                $process->getOutput(),
+                $process->getErrorOutput()
+            );
         }
 
         // output directory + name of file
@@ -72,6 +79,7 @@ class Optimize implements FilterInterface {
 
     /**
      * @param ThingInterface $thing
+     *
      * @return boolean
      */
     public function canHandle(ThingInterface $thing)

@@ -2,11 +2,10 @@
 
 namespace Asoc\Dadatata\Filter;
 
-
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class ImageOptions extends Options {
-
+class ImageOptions extends Options
+{
     const OPTION_FORMAT = 'format';
     const OPTION_WIDTH = 'width';
     const OPTION_HEIGHT = 'height';
@@ -32,36 +31,46 @@ class ImageOptions extends Options {
     const WEBP_QUALITY_GOOD = 80;
     const WEBP_QUALITY_AVERAGE = 50;
 
-    public function getHeight() {
+    public function getHeight()
+    {
         return $this->options[self::OPTION_HEIGHT];
     }
 
-    public function getWidth() {
+    public function getWidth()
+    {
         return $this->options[self::OPTION_WIDTH];
     }
 
-    public function getFormat() {
+    public function getFormat()
+    {
         return $this->options[self::OPTION_FORMAT];
     }
 
-    public function getQuality() {
+    public function getQuality()
+    {
         return $this->options[self::OPTION_QUALITY];
     }
 
     protected function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults([
-           self::OPTION_FORMAT => self::FORMAT_JPG,
-           self::OPTION_QUALITY => self::JPG_QUALITY_GOOD
-        ]);
-        $resolver->setRequired([
-            self::OPTION_FORMAT,
-            self::OPTION_QUALITY,
-            self::OPTION_WIDTH,
-            self::OPTION_HEIGHT
-        ]);
-        $resolver->setOptional([
-            self::OPTION_THUMBNAIL
-        ]);
+        $resolver->setDefaults(
+            [
+                self::OPTION_FORMAT  => self::FORMAT_JPG,
+                self::OPTION_QUALITY => self::JPG_QUALITY_GOOD
+            ]
+        );
+        $resolver->setRequired(
+            [
+                self::OPTION_FORMAT,
+                self::OPTION_QUALITY,
+                self::OPTION_WIDTH,
+                self::OPTION_HEIGHT
+            ]
+        );
+        $resolver->setOptional(
+            [
+                self::OPTION_THUMBNAIL
+            ]
+        );
     }
 } 

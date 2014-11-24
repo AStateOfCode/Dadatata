@@ -2,12 +2,13 @@
 
 namespace Asoc\Dadatata\Model;
 
-interface ArchiveInterface {
-
+interface ArchiveInterface
+{
     public function setFormat($format);
+
     public function getFormat();
 
     public function setFileNum($num);
-    public function getFileNum();
 
+    public function getFileNum();
 }

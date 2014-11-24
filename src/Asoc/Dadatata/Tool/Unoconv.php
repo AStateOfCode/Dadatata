@@ -30,15 +30,15 @@ class Unoconv implements ToolInterface
 
     public function __construct($bin = '/usr/bin/unoconv', $home = null, $noLaunch = false)
     {
-        $this->bin = $bin;
-        $this->home = $home;
+        $this->bin      = $bin;
+        $this->home     = $home;
         $this->noLaunch = $noLaunch;
     }
 
     public static function create($directories = [])
     {
         $finder = new ExecutableFinder();
-        $bin = $finder->find('unoconv', null, $directories);
+        $bin    = $finder->find('unoconv', null, $directories);
 
         if (null === $bin) {
             return null;
@@ -70,7 +70,7 @@ class Unoconv implements ToolInterface
     public function getVersion()
     {
         if (null === $this->version) {
-            $pb = new UnoconvBuilder([$this->bin]);
+            $pb      = new UnoconvBuilder([$this->bin]);
             $process = $pb->version()->getProcess();
             $process->run();
             if (preg_match('/unoconv\s([\d\.]+)/', $process->getOutput(), $version)) {
@@ -122,5 +122,4 @@ class Unoconv implements ToolInterface
     {
         $this->noLaunch = $noLaunch;
     }
-
 }

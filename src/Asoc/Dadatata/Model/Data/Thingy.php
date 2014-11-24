@@ -2,8 +2,8 @@
 
 namespace Asoc\Dadatata\Model\Data;
 
-trait Thingy {
-
+trait Thingy
+{
     /**
      * @var string
      */
@@ -85,15 +85,17 @@ trait Thingy {
         return $this->hashes;
     }
 
-    public function setHash($type, $hash) {
+    public function setHash($type, $hash)
+    {
         $this->hashes[$type] = $hash;
     }
 
-    public function getHash($type) {
-        if(isset($this->hashes[$type])) {
+    public function getHash($type)
+    {
+        if (isset($this->hashes[$type])) {
             return $this->hashes[$type];
         }
+
         return null;
     }
-
 }

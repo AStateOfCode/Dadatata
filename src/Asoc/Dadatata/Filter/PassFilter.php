@@ -2,17 +2,15 @@
 
 namespace Asoc\Dadatata\Filter;
 
-
 use Asoc\Dadatata\Model\AudioInterface;
 use Asoc\Dadatata\Model\DocumentInterface;
-use Asoc\Dadatata\Model\FilePathFragments;
 use Asoc\Dadatata\Model\ImageInterface;
 use Asoc\Dadatata\Model\TextInterface;
 use Asoc\Dadatata\Model\ThingInterface;
 use Asoc\Dadatata\Model\VideoInterface;
 
-class PassFilter implements FilterInterface {
-
+class PassFilter implements FilterInterface
+{
     /**
      * @var PassOptions
      */
@@ -23,7 +21,7 @@ class PassFilter implements FilterInterface {
      */
     public function setOptions(OptionsInterface $options)
     {
-        if(!($options instanceof PassOptions)) {
+        if (!($options instanceof PassOptions)) {
             $options = new PassOptions($options);
         }
 
@@ -31,9 +29,10 @@ class PassFilter implements FilterInterface {
     }
 
     /**
-     * @param ThingInterface $thing
-     * @param string $sourcePath
+     * @param ThingInterface                              $thing
+     * @param string                                      $sourcePath
      * @param \Asoc\Dadatata\Filter\OptionsInterface|null $options
+     *
      * @return array Paths to generated files
      */
     public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null)
@@ -43,25 +42,27 @@ class PassFilter implements FilterInterface {
 
     /**
      * @param ThingInterface $thing
+     *
      * @return boolean
      */
     public function canHandle(ThingInterface $thing)
     {
         $ok = false;
 
-        if($this->defaults->passIfCategory()) {
+        if ($this->defaults->passIfCategory()) {
             $category = $this->defaults->getCategory();
-            if($category === 'image' && $thing instanceof ImageInterface
+            if ($category === 'image' && $thing instanceof ImageInterface
                 || $category === 'document' && $thing instanceof DocumentInterface
                 || $category === 'audio' && $thing instanceof AudioInterface
                 || $category === 'video' && $thing instanceof VideoInterface
-                || $category === 'text' && $thing instanceof TextInterface) {
+                || $category === 'text' && $thing instanceof TextInterface
+            ) {
                 $ok = true;
             }
         }
-        if($this->defaults->passIfMime()) {
+        if ($this->defaults->passIfMime()) {
             $mime = $this->defaults->getMime();
-            $ok = $mime === $thing->getMime();
+            $ok   = $mime === $thing->getMime();
         }
 
         return $ok;

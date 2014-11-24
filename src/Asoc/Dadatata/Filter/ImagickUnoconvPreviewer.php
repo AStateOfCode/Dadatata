@@ -9,8 +9,8 @@ use Asoc\Dadatata\Model\ThingInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\ProcessBuilder;
 
-class DocumentImagickUnoconvPreviewer implements PreviewerInterface {
-
+class DocumentImagickUnoconvPreviewer implements PreviewerInterface
+{
     private static $supported = [
         'application/vnd.ms-powerpoint',
         'application/vnd.openxmlformats-documentdocument.presentationml.presentation'
@@ -42,23 +42,31 @@ class DocumentImagickUnoconvPreviewer implements PreviewerInterface {
      */
     private $imageQuality;
 
-    public function __construct(StoreInterface $store, $imageFormat, $imageQuality, $binConvert = '/usr/bin/convert', $binUnoconv = '/usr/bin/unoconv', $tempDir = null, LoggerInterface $logger = null) {
-        $this->store = $store;
-        $this->imageFormat = $imageFormat;
+    public function __construct(
+        StoreInterface $store,
+        $imageFormat,
+        $imageQuality,
+        $binConvert = '/usr/bin/convert',
+        $binUnoconv = '/usr/bin/unoconv',
+        $tempDir = null,
+        LoggerInterface $logger = null
+    ) {
+        $this->store        = $store;
+        $this->imageFormat  = $imageFormat;
         $this->imageQuality = $imageQuality;
-        $this->binConvert = $binConvert;
-        $this->binUnoconv = $binUnoconv;
-        $this->logger = $logger;
-        $this->tempDir = $tempDir;
+        $this->binConvert   = $binConvert;
+        $this->binUnoconv   = $binUnoconv;
+        $this->logger       = $logger;
+        $this->tempDir      = $tempDir;
 
-        if(!is_dir($this->tempDir)) {
+        if (!is_dir($this->tempDir)) {
             mkdir($this->tempDir);
         }
     }
 
     public function canHandle(HasThingInterface $obj, ThingInterface $thing = null)
     {
-        if($thing === null) {
+        if ($thing === null) {
             $thing = $obj->getThing();
         }
 
@@ -66,8 +74,9 @@ class DocumentImagickUnoconvPreviewer implements PreviewerInterface {
     }
 
     // using the sys_temp_dir with tempnam() doesn't work because the output file needs to have the right extension (.pdf)
-    public function generate(HasThingInterface $obj, PreviewInterface $preview, ThingInterface $thing = null) {
-        if($thing === null) {
+    public function generate(HasThingInterface $obj, PreviewInterface $preview, ThingInterface $thing = null)
+    {
+        if ($thing === null) {
             $thing = $obj->getThing();
         }
         $sourcePath = $this->store->getPath($obj, $thing);
@@ -81,24 +90,24 @@ class DocumentImagickUnoconvPreviewer implements PreviewerInterface {
             $targetPdfPath,
             $sourcePath
         ];
-        $pb = new ProcessBuilder($arguments);
-        $process = $pb->getProcess();
-        $code = $process->run();
+        $pb        = new ProcessBuilder($arguments);
+        $process   = $pb->getProcess();
+        $code      = $process->run();
 
-        if($this->logger !== null) {
+        if ($this->logger !== null) {
             $this->logger->debug($process->getCommandLine());
             $this->logger->debug(sprintf('%d - %s', $code, $process->getOutput()));
             $this->logger->debug(sprintf('%d - %s', $code, $process->getErrorOutput()));
         }
 
-        if(!file_exists($targetPdfPath) || filesize($targetPdfPath) === 0) {
+        if (!file_exists($targetPdfPath) || filesize($targetPdfPath) === 0) {
             return false;
         }
 
-        $width = $preview->getWidth();
-        $height = $preview->getHeight();
+        $width             = $preview->getWidth();
+        $height            = $preview->getHeight();
         $targetPreviewPath = $this->store->getPath($obj, true, $preview);
-        $arguments = [
+        $arguments         = [
             'convert',
             '-density',
             150,
@@ -109,11 +118,11 @@ class DocumentImagickUnoconvPreviewer implements PreviewerInterface {
             sprintf('%s[0]', $targetPdfPath),
             sprintf('%s:%s', $this->imageFormat, $targetPreviewPath)
         ];
-        $pb = new ProcessBuilder($arguments);
-        $process = $pb->getProcess();
-        $code = $process->run();
+        $pb                = new ProcessBuilder($arguments);
+        $process           = $pb->getProcess();
+        $code              = $process->run();
 
-        if($this->logger !== null) {
+        if ($this->logger !== null) {
             $this->logger->debug($process->getCommandLine());
             $this->logger->debug(sprintf('%d - %s', $code, $process->getOutput()));
             $this->logger->debug(sprintf('%d - %s', $code, $process->getErrorOutput()));
@@ -123,5 +132,4 @@ class DocumentImagickUnoconvPreviewer implements PreviewerInterface {
 
         return file_exists($targetPreviewPath);
     }
-
 }

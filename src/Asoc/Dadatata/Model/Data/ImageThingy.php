@@ -2,8 +2,8 @@
 
 namespace Asoc\Dadatata\Model\Data;
 
-trait ImageThingy {
-
+trait ImageThingy
+{
     /**
      * @var int
      */
@@ -64,5 +64,4 @@ trait ImageThingy {
     {
         return $this->width;
     }
-
 }

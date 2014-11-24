@@ -2,24 +2,25 @@
 
 namespace Asoc\Dadatata\Filter;
 
-
-interface OptionsInterface {
-
+interface OptionsInterface
+{
     /**
      * @param string $key
-     * @param null $valueWhenUnset
+     * @param null   $valueWhenUnset
+     *
      * @return mixed
      */
     public function get($key, $valueWhenUnset = null);
 
     /**
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function set($key, $value);
 
     /**
      * @param string $key
+     *
      * @return boolean
      */
     public function has($key);
@@ -31,8 +32,8 @@ interface OptionsInterface {
 
     /**
      * @param array|OptionsInterface $options
+     *
      * @return OptionsInterface
      */
     public function merge($options);
-
-} 
+}

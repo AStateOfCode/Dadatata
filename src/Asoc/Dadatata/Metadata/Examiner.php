@@ -4,7 +4,8 @@ namespace Asoc\Dadatata\Metadata;
 
 use Asoc\Dadatata\Exception\FileNotFoundException;
 
-class Examiner implements ExaminerInterface {
+class Examiner implements ExaminerInterface
+{
 
     /**
      * @var ReaderInterface[]
@@ -15,38 +16,39 @@ class Examiner implements ExaminerInterface {
      */
     private $typeGuesser;
 
-    public function __construct(array $typeGuesser, array $reader = []) {
+    public function __construct(array $typeGuesser, array $reader = [])
+    {
         $this->typeGuesser = $typeGuesser;
-        $this->reader = $reader;
+        $this->reader      = $reader;
     }
 
-    public function examine($fileOrPath, $mime = null) {
+    public function examine($fileOrPath, $mime = null)
+    {
         $knowledge = [];
 
-        if($fileOrPath instanceof \SplFileInfo) {
+        if ($fileOrPath instanceof \SplFileInfo) {
             $path = $fileOrPath->getPathname();
-        }
-        else {
+        } else {
             $path = $fileOrPath;
         }
 
-        if(!file_exists($path)) {
+        if (!file_exists($path)) {
             throw new FileNotFoundException(sprintf('Does not exist: %s', $path));
         }
 
-        if($mime === null) {
+        if ($mime === null) {
             list($_ignore, $mime) = $this->categorize($path);
         }
         $knowledge[ReaderInterface::MIME] = $mime;
         $knowledge[ReaderInterface::SIZE] = filesize($path);
 
-        foreach($this->reader as $reader) {
-            if(!$reader->canHandle($mime)) {
+        foreach ($this->reader as $reader) {
+            if (!$reader->canHandle($mime)) {
                 continue;
             }
 
             $data = $reader->extract($path);
-            if($data !== null && is_array($data)) {
+            if ($data !== null && is_array($data)) {
                 $knowledge = array_merge($knowledge, $data);
             }
         }
@@ -57,63 +59,57 @@ class Examiner implements ExaminerInterface {
     public function categorize($fileOrPath, $mime = null)
     {
         $categories = [];
-        $mimes = [];
+        $mimes      = [];
 
-        if($fileOrPath instanceof \SplFileInfo) {
+        if ($fileOrPath instanceof \SplFileInfo) {
             $path = $fileOrPath->getPathname();
-        }
-        else {
+        } else {
             $path = $fileOrPath;
         }
 
-        if(!file_exists($path)) {
+        if (!file_exists($path)) {
             throw new FileNotFoundException(sprintf('Does not exist: %s', $path));
         }
 
-        foreach($this->typeGuesser as $guesser) {
+        foreach ($this->typeGuesser as $guesser) {
             $mime = $guesser->getMimeType($path);
 
-            if(empty($mime)) {
+            if (empty($mime)) {
                 continue;
             }
 
-            if(!isset($mimes[$mime])) {
+            if (!isset($mimes[$mime])) {
                 $mimes[$mime] = 1;
-            }
-            else {
+            } else {
                 $mimes[$mime]++;
             }
 
             $category = $guesser->categorize($path, $mime);
-            if($category === null) {
+            if ($category === null) {
                 continue;
             }
 
-            if(!isset($categories[$category])) {
+            if (!isset($categories[$category])) {
                 $categories[$category] = 1;
-            }
-            else {
+            } else {
                 $categories[$category]++;
             }
         }
 
-        if(count($categories) > 0) {
+        if (count($categories) > 0) {
             arsort($categories);
             $category = array_keys($categories)[0];
-        }
-        else {
+        } else {
             $category = null;
         }
 
-        if(count($mimes) > 0) {
+        if (count($mimes) > 0) {
             arsort($mimes);
             $mime = array_keys($mimes)[0];
-        }
-        else {
+        } else {
             $mime = null;
         }
 
         return [$category, $mime];
     }
-
 }

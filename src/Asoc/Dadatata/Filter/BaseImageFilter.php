@@ -2,8 +2,8 @@
 
 namespace Asoc\Dadatata\Filter;
 
-abstract class BaseImageFilter implements FilterInterface {
-
+abstract class BaseImageFilter implements FilterInterface
+{
     /**
      * @var ImageOptions
      */
@@ -11,38 +11,35 @@ abstract class BaseImageFilter implements FilterInterface {
 
     public function setOptions(OptionsInterface $options)
     {
-        if(!($options instanceof ImageOptions)) {
+        if (!($options instanceof ImageOptions)) {
             $options = new ImageOptions($options->all());
         }
         $this->defaults = $options;
     }
 
-    protected function getProperSize($targetWidth, $targetHeight, $sourceWidth, $sourceHeight, $upScale = false) {
+    protected function getProperSize($targetWidth, $targetHeight, $sourceWidth, $sourceHeight, $upScale = false)
+    {
         // http://stackoverflow.com/questions/7863653/algorithm-to-resize-image-and-maintain-aspect-ratio-to-fit-iphone
-        if($targetWidth > $targetHeight) {
+        if ($targetWidth > $targetHeight) {
             $shortSideMax = $targetHeight;
-            $longSideMax = $targetWidth;
-        }
-        else {
+            $longSideMax  = $targetWidth;
+        } else {
             $shortSideMax = $targetWidth;
-            $longSideMax = $targetHeight;
+            $longSideMax  = $targetHeight;
         }
 
-        if ($sourceWidth >= $sourceHeight)
-        {
+        if ($sourceWidth >= $sourceHeight) {
             $wRatio = $longSideMax / $sourceWidth;
             $hRatio = $shortSideMax / $sourceHeight;
-        }
-        else
-        {
+        } else {
             $wRatio = $shortSideMax / $sourceWidth;
             $hRatio = $longSideMax / $sourceHeight;
         }
 
         $resizeRatio = min($wRatio, $hRatio);
 
-        if($resizeRatio < 1 || $upScale) {
-            $width = $sourceWidth * $resizeRatio;
+        if ($resizeRatio < 1 || $upScale) {
+            $width  = $sourceWidth * $resizeRatio;
             $height = $sourceHeight * $resizeRatio;
 
             return [$resizeRatio, $width, $height];
@@ -50,5 +47,4 @@ abstract class BaseImageFilter implements FilterInterface {
 
         return [$resizeRatio, $sourceWidth, $sourceHeight];
     }
-
-} 
+}

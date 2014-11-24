@@ -4,31 +4,33 @@ namespace Asoc\Dadatata\Filter;
 
 use Asoc\Dadatata\Model\ThingInterface;
 
-class ChainFilter implements FilterInterface {
+class ChainFilter implements FilterInterface
+{
 
     /**
      * @var FilterInterface[]
      */
     private $filters;
 
-    public function __construct(array $filters) {
+    public function __construct(array $filters)
+    {
         $this->filters = $filters;
     }
 
     /**
-     * @param ThingInterface $thing
-     * @param string $sourcePath
+     * @param ThingInterface   $thing
+     * @param string           $sourcePath
      * @param OptionsInterface $options
+     *
      * @return array Paths to generated files
      */
     public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null)
     {
         $result = null;
-        foreach($this->filters as $filter) {
-            if($result === null) {
+        foreach ($this->filters as $filter) {
+            if ($result === null) {
                 $result = $filter->process($thing, $sourcePath, $options);
-            }
-            else {
+            } else {
                 $result = $filter->process($thing, $result[0], $options);
             }
         }
@@ -38,6 +40,7 @@ class ChainFilter implements FilterInterface {
 
     /**
      * @param ThingInterface $thing
+     *
      * @return boolean
      */
     public function canHandle(ThingInterface $thing)
@@ -50,7 +53,7 @@ class ChainFilter implements FilterInterface {
      */
     public function setOptions(OptionsInterface $options)
     {
-        foreach($this->filters as $filter) {
+        foreach ($this->filters as $filter) {
             $filter->setOptions($options);
         }
     }

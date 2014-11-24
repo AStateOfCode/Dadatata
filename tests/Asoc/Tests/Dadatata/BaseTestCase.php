@@ -9,18 +9,20 @@ use Asoc\Dadatata\ToolInterface;
 use Neutron\TemporaryFilesystem\Manager;
 use Symfony\Component\Process\ExecutableFinder;
 
-abstract class BaseTestCase extends \PHPUnit_Framework_TestCase {
-
+abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
+{
     protected $tempFiles;
 
     protected $tempStores;
 
     protected $tmpFs;
 
-    protected function getTmpFs() {
-        if(null === $this->tmpFs) {
+    protected function getTmpFs()
+    {
+        if (null === $this->tmpFs) {
             $this->tmpFs = Manager::create();
         }
+
         return $this->tmpFs;
     }
 
@@ -38,18 +40,18 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase {
         return $tempfile;
     }
 
-    protected function rrmdir($dir) {
-        foreach(glob($dir . '/*') as $file) {
-            if(is_dir($file)) {
+    protected function rrmdir($dir)
+    {
+        foreach (glob($dir.'/*') as $file) {
+            if (is_dir($file)) {
                 $this->rrmdir($file);
-            }
-            else {
-                if(is_file($file)) {
+            } else {
+                if (is_file($file)) {
                     unlink($file);
                 }
             }
         }
-        if(is_dir($dir)) {
+        if (is_dir($dir)) {
             rmdir($dir);
         }
     }
@@ -63,24 +65,26 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase {
             $this->tempFiles = [];
         }
 
-        if(null !== $this->tempStores) {
-            foreach($this->tempStores as $path) {
+        if (null !== $this->tempStores) {
+            foreach ($this->tempStores as $path) {
                 $this->rrmdir($path);
             }
         }
     }
 
-    protected function markTestSkippedIfToolIsNotAvailable($name, ToolInterface $tool = null) {
-        if(null === $tool) {
+    protected function markTestSkippedIfToolIsNotAvailable($name, ToolInterface $tool = null)
+    {
+        if (null === $tool) {
             $this->markTestSkipped(sprintf('Tool is not available: %s', $name));
         }
     }
 
-    protected function skipIfToolIsNotAvailable($name, $message) {
+    protected function skipIfToolIsNotAvailable($name, $message)
+    {
         $executableFinder = new ExecutableFinder();
-        $path = $executableFinder->find($name);
+        $path             = $executableFinder->find($name);
 
-        if($path === null) {
+        if ($path === null) {
             $this->markTestSkipped(sprintf('Tool is not available: %s (%s)', $name, $message));
         }
 
@@ -90,7 +94,8 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase {
     /**
      * @return ThingInterface|ImageInterface
      */
-    protected function createImageThingMock() {
+    protected function createImageThingMock()
+    {
         $thing = $this->getMockForAbstractClass('Asoc\Tests\Dadatata\Model\ImageMock');
         $thing->expects($this->any())->method('getKey')->will($this->returnValue('php_logo.png'));
         $thing->expects($this->any())->method('getWidth')->will($this->returnValue(1000));
@@ -99,14 +104,15 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase {
         return $thing;
     }
 
-    protected function createTempDirectory($create = true) {
+    protected function createTempDirectory($create = true)
+    {
         $dir = sys_get_temp_dir().'/dadatatatest'.uniqid();
 
-        if($create && !is_dir($dir)) {
+        if ($create && !is_dir($dir)) {
             mkdir($dir, 0777);
         }
 
-        if(null === $this->tempStores) {
+        if (null === $this->tempStores) {
             $this->tempStores = [];
         }
         $this->tempStores[] = $dir;
@@ -114,49 +120,53 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase {
         return $dir;
     }
 
-    protected function createDocumentMock($key = null) {
+    protected function createDocumentMock($key = null)
+    {
         $thing = $this->getMockForAbstractClass('Asoc\Tests\Dadatata\Model\DocumentMock');
 
-        if(null !== $key) {
+        if (null !== $key) {
             $thing->expects($this->any())->method('getKey')->will($this->returnValue($key));
         }
 
         return $thing;
     }
 
-    protected function createImageMock($key = null) {
+    protected function createImageMock($key = null)
+    {
         $thing = $this->getMockForAbstractClass('Asoc\Tests\Dadatata\Model\ImageMock');
 
-        if(null !== $key) {
+        if (null !== $key) {
             $thing->expects($this->any())->method('getKey')->will($this->returnValue($key));
         }
 
         return $thing;
     }
 
-    protected function createEmptyThingMock() {
+    protected function createEmptyThingMock()
+    {
         return $this->getMockForAbstractClass('Asoc\Tests\Dadatata\Model\ImageMock');
     }
 
-    protected function createLocator() {
+    protected function createLocator()
+    {
         return new FlatLocator(__DIR__.'/Resources/');
     }
 
-    protected function createTempLocator() {
+    protected function createTempLocator()
+    {
         // don't create the directory, the locator should do it
         return new FlatLocator($this->createTempDirectory(false));
     }
 
-    protected function assertMime($filePath, array $mimes) {
+    protected function assertMime($filePath, array $mimes)
+    {
         try {
-            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $finfo      = new \finfo(FILEINFO_MIME_TYPE);
             $actualMime = $finfo->file($filePath);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             $actualMime = 'couldNotReadMime';
         }
 
         $this->assertTrue(in_array($actualMime, $mimes));
     }
-
-} 
+}
