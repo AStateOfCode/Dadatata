@@ -113,7 +113,7 @@ class MimeTypeGuesser implements TypeGuesserInterface {
         'application/vnd.oasis.opendocument.chart' => true,
         'application/vnd.oasis.opendocument.graphics' => true,
         'application/vnd.oasis.opendocument.presentation' => true,
-        'application/vnd.oasis.opendocument.speadsheet' => true,
+        'application/vnd.oasis.opendocument.spreadsheet' => true,
         'application/vnd.oasis.opendocument.text' => true,
 
         // microsoft office <2007
