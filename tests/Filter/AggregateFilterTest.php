@@ -1,9 +1,9 @@
 <?php
 
-namespace Asoc\Tests\Dadatata\Filter;
+namespace Asoc\Dadatata\Tests\Filter;
 
 use Asoc\Dadatata\Filter\AggregateFilter;
-use Asoc\Tests\Dadatata\BaseTestCase;
+use Asoc\Dadatata\Tests\BaseTestCase;
 
 class AggregateFilterTest extends BaseTestCase
 {

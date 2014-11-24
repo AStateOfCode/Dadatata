@@ -1,6 +1,6 @@
 <?php
 
-namespace Asoc\Tests\Dadatata\Model;
+namespace Asoc\Dadatata\Tests\Model;
 
 use Asoc\Dadatata\Model\DocumentInterface;
 use Asoc\Dadatata\Model\ThingInterface;

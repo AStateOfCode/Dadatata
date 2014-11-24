@@ -1,6 +1,6 @@
 <?php
 
-namespace Asoc\Tests\Dadatata;
+namespace Asoc\Dadatata\Tests;
 
 abstract class BaseMediaInfoTestCase extends BaseTestCase
 {

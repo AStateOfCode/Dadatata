@@ -1,8 +1,8 @@
 <?php
-namespace Asoc\Tests\Dadatata\Metadata\Reader\Mediainfo;
+namespace Asoc\Dadatata\Tests\Metadata\Reader\Mediainfo;
 
 use Asoc\Dadatata\Metadata\Reader\Mediainfo\Image;
-use Asoc\Tests\Dadatata\BaseMediaInfoTestCase;
+use Asoc\Dadatata\Tests\BaseMediaInfoTestCase;
 
 class ImageTest extends BaseMediaInfoTestCase
 {

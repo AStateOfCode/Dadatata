@@ -1,6 +1,6 @@
 <?php
 
-namespace Asoc\Tests\Dadatata;
+namespace Asoc\Dadatata\Tests;
 
 use Asoc\Dadatata\Filesystem\FlatLocator;
 use Asoc\Dadatata\Model\ImageInterface;
@@ -96,7 +96,7 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function createImageThingMock()
     {
-        $thing = $this->getMockForAbstractClass('Asoc\Tests\Dadatata\Model\ImageMock');
+        $thing = $this->getMockForAbstractClass('Asoc\Dadatata\Tests\Model\ImageMock');
         $thing->expects($this->any())->method('getKey')->will($this->returnValue('php_logo.png'));
         $thing->expects($this->any())->method('getWidth')->will($this->returnValue(1000));
         $thing->expects($this->any())->method('getHeight')->will($this->returnValue(530));
@@ -122,7 +122,7 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 
     protected function createDocumentMock($key = null)
     {
-        $thing = $this->getMockForAbstractClass('Asoc\Tests\Dadatata\Model\DocumentMock');
+        $thing = $this->getMockForAbstractClass('Asoc\Dadatata\Tests\Model\DocumentMock');
 
         if (null !== $key) {
             $thing->expects($this->any())->method('getKey')->will($this->returnValue($key));
@@ -133,7 +133,7 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 
     protected function createImageMock($key = null)
     {
-        $thing = $this->getMockForAbstractClass('Asoc\Tests\Dadatata\Model\ImageMock');
+        $thing = $this->getMockForAbstractClass('Asoc\Dadatata\Tests\Model\ImageMock');
 
         if (null !== $key) {
             $thing->expects($this->any())->method('getKey')->will($this->returnValue($key));
@@ -144,7 +144,7 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 
     protected function createEmptyThingMock()
     {
-        return $this->getMockForAbstractClass('Asoc\Tests\Dadatata\Model\ImageMock');
+        return $this->getMockForAbstractClass('Asoc\Dadatata\Tests\Model\ImageMock');
     }
 
     protected function createLocator()

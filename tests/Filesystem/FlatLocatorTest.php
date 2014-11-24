@@ -1,6 +1,6 @@
 <?php
 
-namespace Asoc\Tests\Dadatata\Filesystem;
+namespace Asoc\Dadatata\Tests\Filesystem;
 
 use Asoc\Dadatata\Filesystem\FlatLocator;
 

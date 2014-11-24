@@ -6,4 +6,4 @@ if (!is_file($autoloadFile = __DIR__.'/../vendor/autoload.php')) {
 }
 
 $loader = require $autoloadFile;
-$loader->add('Asoc\Tests\Dadatata', __DIR__, true);
+$loader->add('Asoc\Dadatata\Tests', __DIR__, true);

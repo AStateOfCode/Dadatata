@@ -1,10 +1,10 @@
 <?php
 
-namespace Asoc\Tests\Dadatata\Metadata\Reader\Php;
+namespace Asoc\Dadatata\Tests\Metadata\Reader\Php;
 
 use Asoc\Dadatata\Metadata\Reader\Php\Sha1;
 use Asoc\Dadatata\Metadata\ReaderInterface;
-use Asoc\Tests\Dadatata\BaseTestCase;
+use Asoc\Dadatata\Tests\BaseTestCase;
 
 class Sha1Test extends BaseTestCase
 {

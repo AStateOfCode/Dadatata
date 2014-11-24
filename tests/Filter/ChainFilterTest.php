@@ -1,9 +1,9 @@
 <?php
 
-namespace Asoc\Tests\Dadatata\Filter;
+namespace Asoc\Dadatata\Tests\Filter;
 
 use Asoc\Dadatata\Filter\ChainFilter;
-use Asoc\Tests\Dadatata\BaseTestCase;
+use Asoc\Dadatata\Tests\BaseTestCase;
 
 class ChainFilterTest extends BaseTestCase
 {

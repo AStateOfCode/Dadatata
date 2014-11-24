@@ -1,11 +1,11 @@
 <?php
 
-namespace Asoc\Tests\Dadatata\Metadata;
+namespace Asoc\Dadatata\Tests\Metadata;
 
 use Asoc\Dadatata\Metadata\Examiner;
 use Asoc\Dadatata\Metadata\ReaderInterface;
 use Asoc\Dadatata\Metadata\TypeGuesserInterface;
-use Asoc\Tests\Dadatata\BaseTestCase;
+use Asoc\Dadatata\Tests\BaseTestCase;
 
 class ExaminerTest extends BaseTestCase
 {

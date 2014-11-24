@@ -1,10 +1,10 @@
 <?php
 
-namespace Asoc\Tests\Dadatata\Metadata\Reader\Php;
+namespace Asoc\Dadatata\Tests\Metadata\Reader\Php;
 
 use Asoc\Dadatata\Metadata\Reader\Php\Imagine;
 use Asoc\Dadatata\Metadata\ReaderInterface;
-use Asoc\Tests\Dadatata\BaseTestCase;
+use Asoc\Dadatata\Tests\BaseTestCase;
 
 class ImagineTest extends BaseTestCase
 {

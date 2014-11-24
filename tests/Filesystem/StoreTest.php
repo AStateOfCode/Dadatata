@@ -1,10 +1,10 @@
 <?php
 
-namespace Asoc\Tests\Dadatata\Filesystem;
+namespace Asoc\Dadatata\Tests\Filesystem;
 
 use Asoc\Dadatata\Filesystem\Store;
 use Asoc\Dadatata\Model\FilePathFragments;
-use Asoc\Tests\Dadatata\BaseTestCase;
+use Asoc\Dadatata\Tests\BaseTestCase;
 
 class StoreTest extends BaseTestCase
 {
