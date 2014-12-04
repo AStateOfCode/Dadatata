@@ -44,10 +44,16 @@ class Examiner implements ExaminerInterface {
             if(!$reader->canHandle($mime)) {
                 continue;
             }
+            
+            // try to read the file, if it fails, don't break
+            try {
+                $data = $reader->extract($path);
 
-            $data = $reader->extract($path);
-            if($data !== null && is_array($data)) {
-                $knowledge = array_merge($knowledge, $data);
+                if ($data !== null && is_array($data)) {
+                    $knowledge = array_merge($knowledge, $data);
+                }
+            } catch (\Exception $e) {
+                // TODO log
             }
         }
 
