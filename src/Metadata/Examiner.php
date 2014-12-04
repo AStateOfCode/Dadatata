@@ -6,7 +6,6 @@ use Asoc\Dadatata\Exception\FileNotFoundException;
 
 class Examiner implements ExaminerInterface
 {
-
     /**
      * @var ReaderInterface[]
      */
@@ -37,7 +36,7 @@ class Examiner implements ExaminerInterface
         }
 
         if ($mime === null) {
-            list($_ignore, $mime) = $this->categorize($path);
+            list($_, $mime) = $this->categorize($path);
         }
         $knowledge[ReaderInterface::MIME] = $mime;
         $knowledge[ReaderInterface::SIZE] = filesize($path);
@@ -47,9 +46,15 @@ class Examiner implements ExaminerInterface
                 continue;
             }
 
-            $data = $reader->extract($path);
-            if ($data !== null && is_array($data)) {
-                $knowledge = array_merge($knowledge, $data);
+            // try to read the file, if it fails, don't break
+            try {
+                $data = $reader->extract($path);
+
+                if ($data !== null && is_array($data)) {
+                    $knowledge = array_merge($knowledge, $data);
+                }
+            } catch (\Exception $e) {
+                // TODO log
             }
         }
 
