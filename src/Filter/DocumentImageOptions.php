@@ -4,6 +4,11 @@ namespace Asoc\Dadatata\Filter;
 
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Class DocumentImageOptions
+ *
+ * @package Asoc\Dadatata\Filter
+ */
 class DocumentImageOptions extends ImageOptions
 {
     const OPTION_PAGES = 'pages';
@@ -31,13 +36,20 @@ class DocumentImageOptions extends ImageOptions
                 self::OPTION_DENSITY => 150
             ]
         );
+    }
 
+    protected function setRequiredOptions(OptionsResolverInterface $resolver)
+    {
         $resolver->setRequired(
             [
                 self::OPTION_FORMAT,
                 self::OPTION_QUALITY
             ]
         );
+    }
+
+    protected function setOptionalOptions(OptionsResolverInterface $resolver)
+    {
         $resolver->setOptional(
             [
                 self::OPTION_WIDTH,

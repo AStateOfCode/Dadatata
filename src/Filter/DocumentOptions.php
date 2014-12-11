@@ -4,6 +4,11 @@ namespace Asoc\Dadatata\Filter;
 
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Class DocumentOptions
+ *
+ * @package Asoc\Dadatata\Filter
+ */
 class DocumentOptions extends Options
 {
     const OPTION_FORMAT = 'format';
@@ -13,7 +18,7 @@ class DocumentOptions extends Options
         return $this->options[self::OPTION_FORMAT];
     }
 
-    protected function setDefaultOptions(OptionsResolverInterface $resolver)
+    protected function setRequiredOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setRequired(
             [

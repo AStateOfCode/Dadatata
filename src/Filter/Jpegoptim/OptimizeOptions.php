@@ -5,6 +5,11 @@ namespace Asoc\Dadatata\Filter\Jpegoptim;
 use Asoc\Dadatata\Filter\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Class OptimizeOptions
+ *
+ * @package Asoc\Dadatata\Filter\Jpegoptim
+ */
 class OptimizeOptions extends Options
 {
     const OPTION_QUALITY = 'quality';
@@ -39,22 +44,31 @@ class OptimizeOptions extends Options
                 self::OPTION_STRIP => 'all'
             ]
         );
+
+        $resolver->setAllowedValues(
+            [
+                self::OPTION_ALL   => ['normal', 'progressive'],
+                self::OPTION_STRIP => ['all', 'com', 'exif', 'iptc', 'icc']
+            ]
+        );
+    }
+
+    protected function setRequiredOptions(OptionsResolverInterface $resolver)
+    {
         $resolver->setRequired(
             [
                 self::OPTION_QUALITY
             ]
         );
+    }
+
+    protected function setOptionalOptions(OptionsResolverInterface $resolver)
+    {
         $resolver->setOptional(
             [
                 self::OPTION_THRESHOLD,
                 self::OPTION_ALL,
                 self::OPTION_STRIP
-            ]
-        );
-        $resolver->setAllowedValues(
-            [
-                self::OPTION_ALL   => ['normal', 'progressive'],
-                self::OPTION_STRIP => ['all', 'com', 'exif', 'iptc', 'icc']
             ]
         );
     }

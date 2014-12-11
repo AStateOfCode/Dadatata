@@ -16,6 +16,8 @@ class Options implements OptionsInterface
     {
         $resolver = new OptionsResolver();
         $this->setDefaultOptions($resolver);
+        $this->setRequiredOptions($resolver);
+        $this->setOptionalOptions($resolver);
 
         $this->options = $resolver->resolve($options);
     }
@@ -67,6 +69,14 @@ class Options implements OptionsInterface
     }
 
     protected function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+    }
+
+    protected function setRequiredOptions(OptionsResolverInterface $resolver)
+    {
+    }
+
+    protected function setOptionalOptions(OptionsResolverInterface $resolver)
     {
     }
 }

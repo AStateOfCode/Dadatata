@@ -4,6 +4,11 @@ namespace Asoc\Dadatata\Filter;
 
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Class ImageOptions
+ *
+ * @package Asoc\Dadatata\Filter
+ */
 class ImageOptions extends Options
 {
     const OPTION_FORMAT = 'format';
@@ -59,6 +64,10 @@ class ImageOptions extends Options
                 self::OPTION_QUALITY => self::JPG_QUALITY_GOOD
             ]
         );
+    }
+
+    protected function setRequiredOptions(OptionsResolverInterface $resolver)
+    {
         $resolver->setRequired(
             [
                 self::OPTION_FORMAT,
@@ -67,10 +76,14 @@ class ImageOptions extends Options
                 self::OPTION_HEIGHT
             ]
         );
+    }
+
+    protected function setOptionalOptions(OptionsResolverInterface $resolver)
+    {
         $resolver->setOptional(
             [
                 self::OPTION_THUMBNAIL
             ]
         );
     }
-} 
+}

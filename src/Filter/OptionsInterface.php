@@ -2,6 +2,11 @@
 
 namespace Asoc\Dadatata\Filter;
 
+/**
+ * Interface OptionsInterface
+ *
+ * @package Asoc\Dadatata\Filter
+ */
 interface OptionsInterface
 {
     /**

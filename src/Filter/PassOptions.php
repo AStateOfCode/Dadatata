@@ -4,6 +4,11 @@ namespace Asoc\Dadatata\Filter;
 
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Class PassOptions
+ *
+ * @package Asoc\Dadatata\Filter
+ */
 class PassOptions extends Options
 {
     const OPTION_MIME = 'mime';
@@ -29,7 +34,7 @@ class PassOptions extends Options
         return $this->options['category'];
     }
 
-    protected function setDefaultOptions(OptionsResolverInterface $resolver)
+    protected function setOptionalOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setOptional(
             [
