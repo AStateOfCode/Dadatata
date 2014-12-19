@@ -31,7 +31,13 @@ class ChainFilter implements FilterInterface
             if ($result === null) {
                 $result = $filter->process($thing, $sourcePath, $options);
             } else {
-                $result = $filter->process($thing, $result[0], $options);
+                $tmp = [];
+
+                foreach ($result as $path) {
+                    $tmp = array_merge($tmp, $filter->process($thing, $path, $options));
+                }
+
+                $result = $tmp;
             }
         }
 
