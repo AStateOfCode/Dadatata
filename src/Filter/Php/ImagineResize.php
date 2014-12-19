@@ -9,6 +9,7 @@ use Asoc\Dadatata\Model\ImageInterface;
 use Asoc\Dadatata\Model\ThingInterface;
 use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
+use Neutron\TemporaryFilesystem\TemporaryFilesystemInterface;
 
 class ImagineResize extends BaseImageFilter
 {
@@ -22,17 +23,28 @@ class ImagineResize extends BaseImageFilter
      */
     private $imagine;
 
-    public function __construct(ImagineInterface $imagine)
+    /**
+     * @var TemporaryFilesystemInterface
+     */
+    private $tmpFs;
+
+    /**
+     * @param \Imagine\Image\ImagineInterface $imagine
+     * @param TemporaryFilesystemInterface    $tmpFs
+     */
+    public function __construct(ImagineInterface $imagine, TemporaryFilesystemInterface $tmpFs)
     {
         $this->imagine = $imagine;
+        $this->tmpFs   = $tmpFs;
     }
 
     /**
      * @param ThingInterface   $thing
-     * @param                  $sourcePath
+     * @param string           $sourcePath
      * @param OptionsInterface $options
      *
      * @return array Paths to generated files
+     * @throws ProcessingFailedException
      */
     public function process(ThingInterface $thing, $sourcePath, OptionsInterface $options = null)
     {
@@ -47,7 +59,7 @@ class ImagineResize extends BaseImageFilter
 
         $transformation = $this->getTransformation($image, $size, $options);
 
-        $tmpPath = tempnam(sys_get_temp_dir(), 'Dadatata');
+        $tmpPath = $this->tmpFs->createTemporaryFile();
         $transformation->save(
             $tmpPath,
             [
