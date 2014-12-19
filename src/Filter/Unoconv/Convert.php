@@ -8,6 +8,7 @@ use Asoc\Dadatata\Filter\FilterInterface;
 use Asoc\Dadatata\Filter\OptionsInterface;
 use Asoc\Dadatata\Model\DocumentInterface;
 use Asoc\Dadatata\Model\ImageInterface;
+use Asoc\Dadatata\Model\TextInterface;
 use Asoc\Dadatata\Model\ThingInterface;
 use Asoc\Dadatata\Tool\Unoconv;
 use Asoc\Dadatata\ToolInterface;
@@ -87,6 +88,6 @@ class Convert implements FilterInterface
      */
     public function canHandle(ThingInterface $thing)
     {
-        return $thing instanceof DocumentInterface || $thing instanceof ImageInterface;
+        return $thing instanceof DocumentInterface || $thing instanceof ImageInterface || $thing instanceof TextInterface;
     }
 }
