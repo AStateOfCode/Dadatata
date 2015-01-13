@@ -66,11 +66,15 @@ class Convert implements FilterInterface
         /** @var DocumentOptions $options */
         $options = $this->defaults->merge($options);
 
-        $pb      = $this->soffice
+        $pb = $this->soffice
             ->getProcessBuilder()
             ->format($options->getFormat())
             ->input($sourcePath)
             ->outputDir($tmpDir);
+
+        // we override the home directory so it does not cause collisions if soffice is run multiple times concurrently
+        $pb->setEnv('HOME', $this->tmpFs->createTemporaryDirectory());
+
         $process = $pb->getProcess();
 
         $code = $process->run();
