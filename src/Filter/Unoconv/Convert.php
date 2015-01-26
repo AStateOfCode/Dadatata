@@ -88,6 +88,10 @@ class Convert implements FilterInterface
      */
     public function canHandle(ThingInterface $thing)
     {
-        return $thing instanceof DocumentInterface || $thing instanceof ImageInterface || $thing instanceof TextInterface;
+        return $thing instanceof DocumentInterface
+        || $thing instanceof ImageInterface
+        || $thing instanceof TextInterface
+        || $thing->getMime() === 'text/rtf'
+        || $thing->getMime() === 'application/rtf';
     }
 }
