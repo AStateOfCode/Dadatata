@@ -13,19 +13,15 @@ class MimeTypeGuesser implements TypeGuesserInterface
         $mime = strtolower($mime);
 
         switch (true) {
-            case strpos($mime, 'image/') === 0:
             case isset(static::$mimeCategoryMapImage[$mime]):
                 return self::CATEGORY_IMAGE;
 
-            case strpos($mime, 'video/') === 0:
             case isset(static::$mimeCategoryMapVideo[$mime]):
                 return self::CATEGORY_VIDEO;
 
-            case strpos($mime, 'audio/') === 0:
             case isset(static::$mimeCategoryMapAudio[$mime]):
                 return self::CATEGORY_AUDIO;
 
-            case strpos($mime, 'text/') === 0:
             case isset(static::$mimeCategoryMapText[$mime]):
                 return self::CATEGORY_TEXT;
 
@@ -34,6 +30,18 @@ class MimeTypeGuesser implements TypeGuesserInterface
 
             case isset(static::$mimeCategoryMapDocument[$mime]):
                 return self::CATEGORY_DOCUMENT;
+
+            case strpos($mime, 'text/') === 0:
+                return self::CATEGORY_TEXT;
+
+            case strpos($mime, 'image/') === 0:
+                return self::CATEGORY_IMAGE;
+
+            case strpos($mime, 'audio/') === 0:
+                return self::CATEGORY_AUDIO;
+
+            case strpos($mime, 'video/') === 0:
+                return self::CATEGORY_VIDEO;
         }
 
         return null;
@@ -128,7 +136,9 @@ class MimeTypeGuesser implements TypeGuesserInterface
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'         => true,
         'application/vnd.openxmlformats-officedocument.spreadsheetml.template'      => true,
         'application/vnd.openxmlformats-officedocument.presentationml.presentation' => true,
-        'application/vnd.openxmlformats-officedocument.presentationml.template'     => true
+        'application/vnd.openxmlformats-officedocument.presentationml.template'     => true,
+        'text/rtf'                                                                  => true,
+        'application/rtf'                                                           => true
     ];
 
 }
