@@ -78,6 +78,12 @@ class Convert implements FilterInterface
         $process = $pb->getProcess();
 
         $code = $process->run();
+
+        // https://github.com/dagwieers/unoconv/issues/192
+        if($code === 81) {
+            $code = $process->run();
+        }
+
         if ($code !== 0) {
             throw ProcessingFailedException::create(
                 'Failed to convert document to PDF',
