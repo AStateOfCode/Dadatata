@@ -2,7 +2,7 @@
 
 namespace Asoc\Dadatata\Filter;
 
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class DocumentOptions
@@ -18,7 +18,7 @@ class DocumentOptions extends Options
         return $this->options[self::OPTION_FORMAT];
     }
 
-    protected function setRequiredOptions(OptionsResolverInterface $resolver)
+    protected function setRequiredOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired(
             [

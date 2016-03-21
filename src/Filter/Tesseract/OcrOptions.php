@@ -3,7 +3,7 @@
 namespace Asoc\Dadatata\Filter\Tesseract;
 
 use Asoc\Dadatata\Filter\Options;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class OcrOptions
@@ -19,9 +19,9 @@ class OcrOptions extends Options
         return $this->options[self::OPTION_LANGUAGE];
     }
 
-    protected function setOptionalOptions(OptionsResolverInterface $resolver)
+    protected function setOptionalOptions(OptionsResolver $resolver)
     {
-        $resolver->setOptional(
+        $resolver->setDefined(
             [
                 self::OPTION_LANGUAGE
             ]

@@ -2,7 +2,7 @@
 
 namespace Asoc\Dadatata\Filter;
 
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class PassOptions
@@ -34,9 +34,9 @@ class PassOptions extends Options
         return $this->options['category'];
     }
 
-    protected function setOptionalOptions(OptionsResolverInterface $resolver)
+    protected function setOptionalOptions(OptionsResolver $resolver)
     {
-        $resolver->setOptional(
+        $resolver->setDefined(
             [
                 self::OPTION_CATEGORY,
                 self::OPTION_MIME

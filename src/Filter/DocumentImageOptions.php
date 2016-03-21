@@ -2,7 +2,7 @@
 
 namespace Asoc\Dadatata\Filter;
 
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class DocumentImageOptions
@@ -24,7 +24,7 @@ class DocumentImageOptions extends ImageOptions
         return $this->options[self::OPTION_DENSITY];
     }
 
-    protected function setDefaultOptions(OptionsResolverInterface $resolver)
+    protected function setDefaultOptions(OptionsResolver $resolver)
     {
         parent::setDefaultOptions($resolver);
 
@@ -38,7 +38,7 @@ class DocumentImageOptions extends ImageOptions
         );
     }
 
-    protected function setRequiredOptions(OptionsResolverInterface $resolver)
+    protected function setRequiredOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired(
             [
@@ -48,9 +48,9 @@ class DocumentImageOptions extends ImageOptions
         );
     }
 
-    protected function setOptionalOptions(OptionsResolverInterface $resolver)
+    protected function setOptionalOptions(OptionsResolver $resolver)
     {
-        $resolver->setOptional(
+        $resolver->setDefined(
             [
                 self::OPTION_WIDTH,
                 self::OPTION_HEIGHT,
