@@ -2,7 +2,7 @@
 
 namespace Asoc\Dadatata\Filter;
 
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class ThumbnailOptions
@@ -21,7 +21,7 @@ class ThumbnailOptions extends ImageOptions
         return $this->options[self::OPTION_MODE];
     }
 
-    protected function setDefaultOptions(OptionsResolverInterface $resolver)
+    protected function setDefaultOptions(OptionsResolver $resolver)
     {
         parent::setDefaultOptions($resolver);
 
@@ -31,10 +31,9 @@ class ThumbnailOptions extends ImageOptions
             ]
         );
 
-        $resolver->setAllowedValues(
-            [
-                self::OPTION_MODE => [self::MODE_OUTBOUND, self::MODE_INSET]
-            ]
-        );
+        $resolver->setAllowedValues(self::OPTION_MODE, [
+            self::MODE_OUTBOUND,
+            self::MODE_INSET
+        ]);
     }
 } 

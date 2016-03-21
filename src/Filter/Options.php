@@ -3,7 +3,6 @@
 namespace Asoc\Dadatata\Filter;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class Options implements OptionsInterface
 {
@@ -68,15 +67,15 @@ class Options implements OptionsInterface
         return isset($this->options[$key]);
     }
 
-    protected function setDefaultOptions(OptionsResolverInterface $resolver)
+    protected function setDefaultOptions(OptionsResolver $resolver)
     {
     }
 
-    protected function setRequiredOptions(OptionsResolverInterface $resolver)
+    protected function setRequiredOptions(OptionsResolver $resolver)
     {
     }
 
-    protected function setOptionalOptions(OptionsResolverInterface $resolver)
+    protected function setOptionalOptions(OptionsResolver $resolver)
     {
     }
 }
